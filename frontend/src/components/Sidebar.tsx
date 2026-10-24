@@ -4,7 +4,6 @@ import {
   Compass,
   MapPin,
   Eye,
-  BarChart3,
   Layers,
   ShieldCheck,
 } from 'lucide-react';
@@ -39,11 +38,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       name: 'Report a Barrier',
       path: '/report',
       icon: Eye,
-    },
-    {
-      name: 'Accessibility Insights',
-      path: '/accessibility-insights',
-      icon: BarChart3,
     },
   ];
 

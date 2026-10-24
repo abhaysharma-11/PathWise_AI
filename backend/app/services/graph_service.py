@@ -618,40 +618,40 @@ class GraphService:
         center_dict = self.metadata.get("center", {"lat": 26.9124, "lon": 75.8193})
         scenarios = [
             DemoScenario(
-                id="demo_stairs_avoidance",
-                title="North Gate to Albert Hall Plaza (Monumental Stairs Avoidance)",
-                description="Demonstrates how wheelchair routing detects 18 steep monumental steps (16.5% grade, no ramp) and diverts via the certified gentle ramp promenade (+85m).",
+                id="demo_stairs_vs_accessible",
+                title="Stairs vs Accessible Route",
+                description="Shortest route climbs 18 steep monumental steps (16.5% grade, no ramp). Wheelchair navigation automatically diverts via the certified gentle ramp promenade (+245m).",
                 start=Coordinate(lat=26.9158, lon=75.8185, name="North Gate (New Gate Entrance)"),
                 destination=Coordinate(lat=26.9122, lon=75.8193, name="Albert Hall Main Museum Plaza"),
                 expected_shortest_barrier="18 Monumental Heritage Steps (no ramp transition, 16.5% grade)",
                 expected_accessible_solution="Rose Garden Step-Free Ramp Promenade (max incline 1.8%, tactile paved, flush curbs)",
             ),
             DemoScenario(
-                id="demo_tactile_navigation",
-                title="North Gate to Albert Hall Plaza (Tactile Paving Guidance)",
-                description="Demonstrates how blind & low-vision routing steers pedestrians onto continuous tactile guidance pathways (Rose Garden & East Museum approach) while avoiding unpaved, cluttered corridors.",
-                start=Coordinate(lat=26.9158, lon=75.8185, name="North Gate (New Gate Entrance)"),
+                id="demo_surface_comfort",
+                title="Surface Comfort",
+                description="Direct heritage route is paved with uneven heritage cobblestones (trip & vibration hazard). Elderly and assisted navigation prioritises the smooth paved West Promenade (+30m).",
+                start=Coordinate(lat=26.9145, lon=75.8158, name="West Gate (Ravindra Manch)"),
                 destination=Coordinate(lat=26.9122, lon=75.8193, name="Albert Hall Main Museum Plaza"),
-                expected_shortest_barrier="Monumental heritage stairs and non-tactile courtyard",
-                expected_accessible_solution="100% tactile-guided pathway via Rose Garden promenade and east approach",
+                expected_shortest_barrier="Uneven heritage cobblestone surface with tripping and rolling resistance",
+                expected_accessible_solution="West Shaded Garden Promenade (smooth concrete, gentle 0.6% slope)",
+            ),
+            DemoScenario(
+                id="demo_obstacle_awareness",
+                title="Obstacle Awareness",
+                description="Direct corridor contains a mid-footpath utility pole hazard without tactile ground cues. Blind & low-vision navigation diverts onto the certified continuous tactile pathway via Rose Garden (+35m).",
+                start=Coordinate(lat=26.9140, lon=75.8222, name="East Gate (Zoo & Aviary Walk)"),
+                destination=Coordinate(lat=26.9122, lon=75.8193, name="Albert Hall Main Museum Plaza"),
+                expected_shortest_barrier="Mid-footpath utility pole & hazard without tactile ground guidance",
+                expected_accessible_solution="Certified tactile-guided promenade via East Rose Garden and flush museum approach",
             ),
             DemoScenario(
                 id="demo_accessible_corridor",
-                title="West Gate (Ravindra Manch) to East Zoo Gate (Identical Safe Paths)",
+                title="Identical Safe Corridor",
                 description="Demonstrates that when no accessibility barriers exist along the central avenue, both algorithms return the exact same route honestly without fabricating differences.",
                 start=Coordinate(lat=26.9145, lon=75.8158, name="West Gate (Ravindra Manch)"),
                 destination=Coordinate(lat=26.9140, lon=75.8222, name="East Gate (Zoo & Aviary Walk)"),
                 expected_shortest_barrier="None",
                 expected_accessible_solution="Identical to shortest path (smooth asphalt, certified curb ramps)",
-            ),
-            DemoScenario(
-                id="demo_south_garden_unverified",
-                title="Albert Hall Plaza to South Gate (Unverified Path Inspection)",
-                description="Demonstrates cautious penalty weighting for unverified perimeter pathways while favoring verified smooth pathways.",
-                start=Coordinate(lat=26.9122, lon=75.8193, name="Albert Hall Main Museum Plaza"),
-                destination=Coordinate(lat=26.9095, lon=75.8190, name="South Gate (Hospital Road Exit)"),
-                expected_shortest_barrier="None",
-                expected_accessible_solution="Verified central walkway prioritized over unverified perimeter path",
             ),
         ]
 
@@ -797,8 +797,47 @@ class GraphService:
                         id=f"barrier_surface_{seg_id}",
                         type="uneven_surface",
                         description=f"Uneven cobblestones with tripping and rolling resistance on {edge.get('name')}",
-                        location=Coordinate(lat=mid_pt[0], lon=mid_pt[1]),
+                        location=Coordinate(lat=mid_pt[0], lon=mid_pt[1], name=edge.get("name")),
                         severity="medium",
+                        prohibits_wheelchair=False,
+                    )
+                )
+
+            if edge.get("barrier") == "pole_obstruction":
+                mid_pt = coords[len(coords) // 2]
+                barriers.append(
+                    AccessibilityBarrier(
+                        id=f"barrier_pole_{seg_id}",
+                        type="pole_obstruction",
+                        description=f"Utility pole & fixture mounted in pedestrian walkway on {edge.get('name')} without tactile guidance",
+                        location=Coordinate(lat=mid_pt[0], lon=mid_pt[1], name=edge.get("name")),
+                        severity="high",
+                        prohibits_wheelchair=False,
+                    )
+                )
+
+            if edge.get("barrier") == "parked_vehicle_blocking_footpath":
+                mid_pt = coords[len(coords) // 2]
+                barriers.append(
+                    AccessibilityBarrier(
+                        id=f"barrier_vehicle_{seg_id}",
+                        type="parked_vehicle_blocking_footpath",
+                        description=f"Parked vehicle blocking pedestrian footpath on {edge.get('name')}",
+                        location=Coordinate(lat=mid_pt[0], lon=mid_pt[1], name=edge.get("name")),
+                        severity="high",
+                        prohibits_wheelchair=True,
+                    )
+                )
+
+            if edge.get("barrier") == "broken_footpath":
+                mid_pt = coords[len(coords) // 2]
+                barriers.append(
+                    AccessibilityBarrier(
+                        id=f"barrier_broken_{seg_id}",
+                        type="broken_footpath",
+                        description=f"Broken pavement and surface disintegration on {edge.get('name')}",
+                        location=Coordinate(lat=mid_pt[0], lon=mid_pt[1], name=edge.get("name")),
+                        severity="high",
                         prohibits_wheelchair=False,
                     )
                 )
@@ -923,6 +962,7 @@ class GraphService:
             is_verified = edge_dict.get("is_verified", False)
             prohibits_wheelchair = edge_dict.get("prohibits_wheelchair", False)
             dynamic_cost_multiplier = edge_dict.get("dynamic_cost_multiplier", 1.0)
+            barrier = edge_dict.get("barrier")
 
             seg_id = edge_dict.get("id")
             active_cb = next((cb for cb in self.confirmed_barriers.values() if cb.segment_id == seg_id), None)
@@ -939,15 +979,16 @@ class GraphService:
                     return float("inf")
 
                 penalty = 1.0 * dynamic_cost_multiplier
-                if surface == "uneven_cobblestone":
-                    penalty *= 4.0
+                if surface == "uneven_cobblestone" or barrier == "uneven_surface":
+                    penalty *= 4.5
+                elif barrier == "broken_footpath":
+                    penalty *= 5.0
+                elif barrier in ["pole_obstruction", "parked_vehicle_blocking_footpath"]:
+                    penalty *= 6.0
                 elif surface == "unverified" or not is_verified:
-                    penalty *= 2.5
-                elif surface == "smooth_concrete":
-                    penalty *= 0.9
-
-                if edge_dict.get("tactile_paving"):
-                    penalty *= 0.95
+                    penalty *= 2.0
+                elif surface in ["smooth_concrete", "asphalt"]:
+                    penalty *= 1.0
 
                 return base_length * penalty
 
@@ -962,19 +1003,26 @@ class GraphService:
                         penalty *= 12.0
                     elif active_cb.barrier_category == BarrierCategory.missing_footpath:
                         penalty *= 15.0
+                    elif active_cb.barrier_category == BarrierCategory.broken_footpath:
+                        penalty *= 8.0
                     elif active_cb.barrier_category == BarrierCategory.uneven_surface:
-                        penalty *= 6.0
+                        penalty *= 5.0
 
-                if edge_dict.get("barrier") == "uneven_surface" or surface == "uneven_cobblestone":
-                    penalty *= 6.0  # Severe tripping hazard
+                if barrier in ["pole_obstruction", "parked_vehicle_blocking_footpath"]:
+                    penalty *= 12.0  # Mid-pathway hazard without tactile guidance
+                elif barrier == "broken_footpath":
+                    penalty *= 8.0
+                elif barrier == "uneven_surface" or surface == "uneven_cobblestone":
+                    penalty *= 4.5  # Tripping hazard
+                
                 if has_stairs:
-                    penalty *= 4.0  # Stairs without guaranteed tactile guide
+                    penalty *= 3.5  # Stairs without tactile warning
                 if not is_verified:
-                    penalty *= 3.5  # Penalize unverified surface
+                    penalty *= 2.5  # Penalize unverified surface
 
-                # Strong bonus for tactile guiding paths
+                # Strong preference for verified continuous tactile guidance paths
                 if edge_dict.get("tactile_paving"):
-                    penalty *= 0.75  # 25% cost reduction for tactile guidance!
+                    penalty *= 0.70  # 30% cost reduction for tactile guidance!
                 elif curb_ramp == "yes":
                     penalty *= 0.95
 
@@ -984,15 +1032,21 @@ class GraphService:
             elif profile == RouteProfile.elderly:
                 penalty = 1.0 * dynamic_cost_multiplier
                 if has_stairs:
-                    penalty *= 12.0  # Strongly avoid stairs
+                    penalty *= 8.0  # Heavily penalise stairs when smooth alternative exists
                 if active_cb and active_cb.prohibits_wheelchair:
-                    penalty *= 8.0   # Avoid blocked footpaths
+                    penalty *= 5.0  # Avoid blocked footpaths
                 if incline > 5.0:
-                    penalty *= 4.0  # Avoid steep climbs
-                if surface == "uneven_cobblestone":
-                    penalty *= 3.5  # Tripping hazard
+                    penalty *= (1.0 + (incline - 5.0) * 0.4)
+                if barrier == "uneven_surface" or surface == "uneven_cobblestone":
+                    penalty *= 3.5  # Severe tripping hazard & joint fatigue
+                elif barrier == "broken_footpath":
+                    penalty *= 4.0
+                elif barrier in ["pole_obstruction", "parked_vehicle_blocking_footpath"]:
+                    penalty *= 1.5
                 if not is_verified:
-                    penalty *= 2.0
+                    penalty *= 1.5
+                if surface in ["smooth_concrete", "asphalt"]:
+                    penalty *= 0.95
 
                 return base_length * penalty
 
@@ -1000,9 +1054,11 @@ class GraphService:
             else:
                 penalty = (1.0 + (incline / 100.0)) * dynamic_cost_multiplier
                 if has_stairs:
-                    penalty *= 1.15
+                    penalty *= 1.05  # Walkable with minor physical cost
+                if barrier == "pole_obstruction":
+                    penalty *= 1.05  # Easy to walk past
                 if active_cb and active_cb.prohibits_wheelchair:
-                    penalty *= 1.5
+                    penalty *= 1.3
                 return base_length * penalty
 
         try:
@@ -1026,24 +1082,42 @@ class GraphService:
         barriers_avoided = [b for b in shortest_barriers if b.id not in acc_barrier_ids]
 
         if is_identical:
-            explanation = (
-                f"Both shortest and accessibility-aware algorithms selected the same route ({distance_meters:.0f}m). "
-                "No impassable stairs or prohibitive barriers were detected along this corridor."
-            )
+            explanation = "Both routes are identical for this journey (same route) based on currently available accessibility evidence."
         else:
-            diff_m = distance_meters - shortest_dist
-            avoided_str = ", ".join(b.type for b in barriers_avoided) if barriers_avoided else "hazardous obstacles"
-            has_dynamic_avoided = any(b.id in self.confirmed_barriers for b in barriers_avoided)
-            if has_dynamic_avoided:
-                explanation = (
-                    f"Accessibility route detour (+{diff_m:.0f}m detour, total {distance_meters:.0f}m). "
-                    f"Successfully diverted around StreetVision-confirmed barrier(s) [{avoided_str}] via certified safe footways."
-                )
-            else:
-                explanation = (
-                    f"Accessibility-aware route is {distance_meters:.0f}m (+{diff_m:.0f}m detour compared to {shortest_dist:.0f}m shortest). "
-                    f"Safely routed around {len(barriers_avoided)} barrier(s) [{avoided_str}] via certified step-free paths."
-                )
+            diff_m = max(0, distance_meters - shortest_dist)
+            avoided_types = {b.type for b in barriers_avoided}
+
+            if profile == RouteProfile.wheelchair:
+                if "stairs" in avoided_types:
+                    explanation = f"This wheelchair route avoids a known stair segment on the shortest path and selects a certified step-free detour (+{diff_m:.0f}m)."
+                elif "missing_curb_cut" in avoided_types:
+                    explanation = f"This wheelchair route avoids an inaccessible kerb transition to maintain continuous step-free rolling (+{diff_m:.0f}m)."
+                elif any(b.id in self.confirmed_barriers for b in barriers_avoided):
+                    explanation = f"This wheelchair route safely diverts (+{diff_m:.0f}m) around an active StreetVision-confirmed barrier."
+                else:
+                    explanation = f"This wheelchair route chooses a certified step-free pathway (+{diff_m:.0f}m detour) to ensure safe rolling mobility."
+
+            elif profile == RouteProfile.elderly:
+                if "uneven_surface" in avoided_types:
+                    explanation = f"The elderly profile prioritises a more suitable surface based on available evidence, taking a smooth paved promenade (+{diff_m:.0f}m) to avoid tripping risks on uneven cobblestones."
+                elif "stairs" in avoided_types:
+                    explanation = f"The elderly profile prioritises a gentle ramped detour (+{diff_m:.0f}m) to avoid strenuous stair climbing."
+                else:
+                    explanation = f"The elderly profile balances walking distance and comfortable pathway conditions (+{diff_m:.0f}m detour)."
+
+            elif profile == RouteProfile.blind_low_vision:
+                if "pole_obstruction" in avoided_types or "parked_vehicle_blocking_footpath" in avoided_types:
+                    explanation = f"This low-vision route navigates via certified tactile-guided pathways (+{diff_m:.0f}m) to safely avoid pedestrian obstructions."
+                elif any(b.id in self.confirmed_barriers for b in barriers_avoided):
+                    explanation = f"This low-vision route steers clear of an active obstacle reported on the pedestrian corridor (+{diff_m:.0f}m)."
+                else:
+                    explanation = f"This low-vision route prioritises continuous tactile guiding pathways (+{diff_m:.0f}m detour) for orientation and safety."
+
+            else:  # general_pedestrian
+                explanation = f"Calculated walking route balances distance and pathway conditions ({distance_meters:.0f}m, +{diff_m:.0f}m adjustment)."
+
+        if confidence.segments_without_imagery > 0:
+            explanation += f" Note: This journey has limited recent imagery coverage ({confidence.segments_without_imagery} segment(s) without imagery <90 days)."
 
         return RouteResponse(
             success=True,

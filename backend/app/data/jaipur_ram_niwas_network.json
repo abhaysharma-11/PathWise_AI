@@ -116,6 +116,13 @@
       "lat": 26.9102,
       "lon": 75.8212,
       "description": "Outer perimeter service path with unverified surface rating"
+    },
+    {
+      "id": "N15_WEST_GARDEN_PROMENADE",
+      "name": "West Shaded Garden Promenade",
+      "lat": 26.9142,
+      "lon": 75.8180,
+      "description": "Smooth asphalt and concrete shaded promenade flanked by lawns and rest benches"
     }
   ],
   "edges": [
@@ -457,6 +464,87 @@
         [26.9102, 75.8212],
         [26.9106, 75.8202],
         [26.9110, 75.8192]
+      ]
+    },
+    {
+      "id": "seg_18_west_gate_to_promenade",
+      "u": "N3_WEST_GATE",
+      "v": "N15_WEST_GARDEN_PROMENADE",
+      "name": "West Lawn Paved Promenade",
+      "highway": "footway",
+      "surface": "smooth_concrete",
+      "is_verified": true,
+      "curb_ramp": "yes",
+      "has_stairs": false,
+      "incline_pct": 0.6,
+      "tactile_paving": false,
+      "barrier": null,
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9145, 75.8158],
+        [26.9146, 75.8170],
+        [26.9142, 75.8180]
+      ]
+    },
+    {
+      "id": "seg_19_promenade_to_plaza",
+      "u": "N15_WEST_GARDEN_PROMENADE",
+      "v": "N7_ALBERT_HALL_PLAZA",
+      "name": "West Promenade to Plaza Link",
+      "highway": "footway",
+      "surface": "smooth_concrete",
+      "is_verified": true,
+      "curb_ramp": "yes",
+      "has_stairs": false,
+      "incline_pct": 0.5,
+      "tactile_paving": false,
+      "barrier": null,
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9142, 75.8180],
+        [26.9132, 75.8188],
+        [26.9126, 75.8190],
+        [26.9122, 75.8193]
+      ]
+    },
+    {
+      "id": "seg_20_east_direct_walk",
+      "u": "N4_EAST_GATE",
+      "v": "N9_EAST_MUSEUM_APPROACH",
+      "name": "East Aviary Walkway (Utility Pole Obstruction)",
+      "highway": "footway",
+      "surface": "paved_stone",
+      "is_verified": true,
+      "curb_ramp": "yes",
+      "has_stairs": false,
+      "incline_pct": 0.9,
+      "tactile_paving": false,
+      "barrier": "pole_obstruction",
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9140, 75.8222],
+        [26.9133, 75.8213],
+        [26.9125, 75.8205]
+      ]
+    },
+    {
+      "id": "seg_21_east_gate_to_rose_garden",
+      "u": "N4_EAST_GATE",
+      "v": "N8_EAST_RAMP_ENTRY",
+      "name": "East Rose Garden Tactile Allée",
+      "highway": "footway",
+      "surface": "smooth_concrete",
+      "is_verified": true,
+      "curb_ramp": "yes",
+      "has_stairs": false,
+      "incline_pct": 0.8,
+      "tactile_paving": true,
+      "barrier": null,
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9140, 75.8222],
+        [26.9138, 75.8214],
+        [26.9136, 75.8208]
       ]
     }
   ]

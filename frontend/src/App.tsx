@@ -1,38 +1,31 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { DeveloperDiagnosticsModal } from './components/DeveloperDiagnosticsModal';
+import { LaunchExperience } from './components/LaunchExperience';
 import { Overview } from './pages/Overview';
 import { RouteExplorer } from './pages/RouteExplorer';
 import { StreetVision } from './pages/StreetVision';
-import { AccessibilityInsights } from './pages/AccessibilityInsights';
 import { NotFound } from './pages/NotFound';
 import { checkBackendHealth } from './services/api';
-import { HealthResponse, ConnectionState } from './types';
+import { ConnectionState } from './types';
 
 const MainLayout: React.FC = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [connectionState, setConnectionState] = useState<ConnectionState>('checking');
-  const [healthData, setHealthData] = useState<HealthResponse | null>(null);
-  const [latencyMs, setLatencyMs] = useState<number | null>(null);
-  const [healthError, setHealthError] = useState<string | null>(null);
   const [diagnosticsOpen, setDiagnosticsOpen] = useState<boolean>(false);
+  const [showLaunch, setShowLaunch] = useState<boolean>(() => {
+    return sessionStorage.getItem('pathwise_intro_seen') !== 'true';
+  });
 
   const performHealthCheck = useCallback(async () => {
     setConnectionState('checking');
     try {
-      const result = await checkBackendHealth();
-      setHealthData(result.data);
-      setLatencyMs(result.latencyMs);
-      setHealthError(null);
+      await checkBackendHealth();
       setConnectionState('connected');
-    } catch (err: unknown) {
-      setHealthData(null);
-      setLatencyMs(null);
-      const msg = err instanceof Error ? err.message : 'Backend unreachable';
-      setHealthError(msg);
+    } catch {
       setConnectionState('disconnected');
     }
   }, []);
@@ -44,10 +37,18 @@ const MainLayout: React.FC = () => {
     return () => clearInterval(intervalId);
   }, [performHealthCheck]);
 
+  const handleLaunchComplete = () => {
+    sessionStorage.setItem('pathwise_intro_seen', 'true');
+    setShowLaunch(false);
+  };
+
   const isMapRoute = location.pathname === '/route-explorer';
 
   return (
     <div className="min-h-screen bg-canvas-950 text-slate-100 flex font-sans selection:bg-cyan-500/20 selection:text-cyan-300">
+      {/* Opening Launch Experience (1.8s once per session) */}
+      {showLaunch && <LaunchExperience onComplete={handleLaunchComplete} />}
+
       {/* Navigation Sidebar */}
       <Sidebar
         mobileMenuOpen={mobileMenuOpen}
@@ -74,18 +75,12 @@ const MainLayout: React.FC = () => {
           }`}
         >
           <Routes>
-            <Route path="/" element={<Overview
-              healthData={healthData}
-              latencyMs={latencyMs}
-              connectionState={connectionState}
-              healthError={healthError}
-              onRefreshHealth={performHealthCheck}
-            />} />
+            <Route path="/" element={<Overview />} />
             <Route path="/route-explorer" element={<RouteExplorer />} />
             <Route path="/report" element={<StreetVision />} />
             <Route path="/street-vision" element={<StreetVision />} />
             <Route path="/streetvision" element={<StreetVision />} />
-            <Route path="/accessibility-insights" element={<AccessibilityInsights />} />
+            <Route path="/accessibility-insights" element={<Navigate to="/route-explorer" replace />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

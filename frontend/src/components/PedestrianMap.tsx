@@ -30,7 +30,7 @@ interface PedestrianMapProps {
   onFilterChange: (filter: ObstacleFilterCategory) => void;
   showSegmentsLayer: boolean;
   onToggleSegmentsLayer?: () => void;
-  activeProfile: RouteProfileType;
+  activeProfile?: RouteProfileType;
 }
 
 export const PedestrianMap: React.FC<PedestrianMapProps> = ({
@@ -52,6 +52,7 @@ export const PedestrianMap: React.FC<PedestrianMapProps> = ({
   onFilterChange,
   showSegmentsLayer,
   onToggleSegmentsLayer,
+  activeProfile,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -64,6 +65,8 @@ export const PedestrianMap: React.FC<PedestrianMapProps> = ({
   const accessibleRouteLayerRef = useRef<L.Polyline | null>(null);
   const markersLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const obstaclesLayerGroupRef = useRef<L.LayerGroup | null>(null);
+  const obstacleMarkersRef = useRef<Map<string, L.Marker>>(new Map());
+  const lastFocusedRouteSigRef = useRef<string | null>(null);
 
   // Initialize Map
   useEffect(() => {
@@ -195,45 +198,75 @@ export const PedestrianMap: React.FC<PedestrianMapProps> = ({
     });
   }, [segments, selectedSegment, showSegmentsLayer, onSelectSegment]);
 
-  // Highlight Affected Road Segment (when obstacle or segment is selected)
+  // Highlight Affected Road Segment (when obstacle or segment is selected, or on shortest route barriers)
   useEffect(() => {
     const group = highlightSegmentLayerRef.current;
     if (!group) return;
 
     group.clearLayers();
 
+    // 1. Explicitly selected obstacle or segment
     const targetSegId = selectedObstacle?.segmentId || selectedSegment?.id;
-    if (!targetSegId) return;
+    if (targetSegId) {
+      const matchedSeg = segments.find((s) => s.id === targetSegId);
+      if (matchedSeg) {
+        const highlightColor = selectedObstacle?.color || '#0284C7';
+        const glowPoly = L.polyline(matchedSeg.coordinates, {
+          color: highlightColor,
+          weight: 10,
+          opacity: 0.35,
+        });
+        const innerPoly = L.polyline(matchedSeg.coordinates, {
+          color: highlightColor,
+          weight: 5,
+          opacity: 1.0,
+        });
+        group.addLayer(glowPoly);
+        group.addLayer(innerPoly);
+        return;
+      }
+    }
 
-    const matchedSeg = segments.find((s) => s.id === targetSegId);
-    if (!matchedSeg) return;
+    // 2. Shortest route barrier segments highlighting (tasteful red/amber glow)
+    if (shortestRoute && shortestRoute.barriers_encountered.length > 0) {
+      shortestRoute.barriers_encountered.forEach((barrier) => {
+        const matchedSeg = segments.find((s) => {
+          if (s.barrier === barrier.type) return true;
+          if (s.has_stairs && barrier.type === 'stairs') return true;
+          return s.coordinates.some(
+            (c) =>
+              Math.abs(c[0] - barrier.location.lat) < 0.0008 &&
+              Math.abs(c[1] - barrier.location.lon) < 0.0008
+          );
+        });
 
-    const highlightColor = selectedObstacle?.color || '#0284C7';
+        if (matchedSeg) {
+          const barrierColor = barrier.severity === 'critical' ? '#EF4444' : '#F59E0B';
+          const glowPoly = L.polyline(matchedSeg.coordinates, {
+            color: barrierColor,
+            weight: 8,
+            opacity: 0.3,
+          });
+          const innerPoly = L.polyline(matchedSeg.coordinates, {
+            color: barrierColor,
+            weight: 3.5,
+            opacity: 0.85,
+            dashArray: '5, 5',
+          });
+          group.addLayer(glowPoly);
+          group.addLayer(innerPoly);
+        }
+      });
+    }
+  }, [selectedObstacle, selectedSegment, segments, shortestRoute]);
 
-    // Outer glow polyline
-    const glowPoly = L.polyline(matchedSeg.coordinates, {
-      color: highlightColor,
-      weight: 10,
-      opacity: 0.35,
-    });
-
-    // Inner sharp polyline
-    const innerPoly = L.polyline(matchedSeg.coordinates, {
-      color: highlightColor,
-      weight: 5,
-      opacity: 1.0,
-    });
-
-    group.addLayer(glowPoly);
-    group.addLayer(innerPoly);
-  }, [selectedObstacle, selectedSegment, segments]);
-
-  // Render Compact, Attractive Obstacle Markers (NO sprawling permanent text)
+  // Render Compact Obstacle Markers with Contextual Popups
   useEffect(() => {
     const group = obstaclesLayerGroupRef.current;
     if (!group) return;
 
     group.clearLayers();
+    obstacleMarkersRef.current.clear();
 
     // Filter obstacles based on active filter
     const visibleObstacles = obstacles.filter((obs) => {
@@ -289,6 +322,47 @@ export const PedestrianMap: React.FC<PedestrianMapProps> = ({
 
       const marker = L.marker([obs.location.lat, obs.location.lon], { icon: obstacleIcon });
 
+      // Determine affected mobility profile for contextual popup
+      const affectedProfile =
+        obs.type === 'stairs' || obs.type === 'missing_curb_cut'
+          ? 'Wheelchair (Access Restricted) • Elderly (Severe)'
+          : obs.type === 'uneven_surface'
+          ? 'Elderly (Trip Hazard) • Wheelchair (Vibration)'
+          : obs.type === 'blocked_footpath'
+          ? 'Blind / Low Vision (Hazard) • Wheelchair'
+          : 'General Pedestrian Caution';
+
+      const isTemporary =
+        obs.source.toLowerCase().includes('report') ||
+        obs.title.toLowerCase().includes('vehicle') ||
+        obs.title.toLowerCase().includes('temporary');
+
+      // Compact Contextual Popup (Mentor Part 5 requirement)
+      const popupHtml = `
+        <div class="p-3 font-sans max-w-[270px] text-slate-100">
+          <div class="flex items-center gap-1.5 font-bold text-xs" style="color: ${obs.color}">
+            <span>${iconSymbol}</span>
+            <span>${obs.label}</span>
+          </div>
+          <div class="text-xs font-bold text-white mt-1 leading-snug">
+            ${obs.title}
+          </div>
+          <p class="text-[11px] text-slate-300 mt-1 leading-relaxed">
+            ${obs.description}
+          </p>
+          <div class="mt-2.5 pt-2 border-t border-slate-700/60 text-[10px] space-y-1 font-mono text-slate-300">
+            <div><strong class="text-slate-400">Affected Profile:</strong> <span class="text-amber-300">${affectedProfile}</span></div>
+            <div><strong class="text-slate-400">Status:</strong> ${isTemporary ? 'Temporary Street Obstacle' : 'Persistent Heritage Feature'} • ${obs.isVerified ? 'Human Verified' : 'Ground Surveyed'}</div>
+            <div><strong class="text-slate-400">Evidence Source:</strong> ${obs.source}</div>
+          </div>
+          <div class="mt-2 text-[10px] text-emerald-400 font-sans font-semibold flex items-center gap-1">
+            <span>✓ Alternative accessible route available</span>
+          </div>
+        </div>
+      `;
+
+      marker.bindPopup(popupHtml, { maxWidth: 290, className: 'custom-barrier-popup' });
+
       marker.on('click', (e) => {
         L.DomEvent.stopPropagation(e);
         onSelectObstacle(obs);
@@ -301,14 +375,43 @@ export const PedestrianMap: React.FC<PedestrianMapProps> = ({
             <span class="text-[10px] text-slate-400">(${obs.severity})</span>
           </div>
           <div class="text-slate-300 text-[11px] mt-0.5">${obs.title}</div>
-          <div class="text-[10px] text-cyan-400 font-mono mt-1">Click to view details & StreetVision</div>
+          <div class="text-[10px] text-cyan-400 font-mono mt-1">Click to view details & popup</div>
         </div>`,
         { sticky: true }
       );
 
+      obstacleMarkersRef.current.set(obs.id, marker);
       group.addLayer(marker);
     });
   }, [obstacles, activeFilter, selectedObstacle, onSelectObstacle]);
+
+  // Auto-focus on primary known barrier ONCE after route calculation
+  useEffect(() => {
+    if (!shortestRoute || !mapInstanceRef.current) return;
+    const sig = `${shortestRoute.node_ids.join('_')}_${activeProfile}`;
+    if (lastFocusedRouteSigRef.current === sig) return;
+    lastFocusedRouteSigRef.current = sig;
+
+    if (shortestRoute.barriers_encountered.length > 0) {
+      const primaryBarrier = shortestRoute.barriers_encountered[0];
+      // Find matching obstacle by coordinates or type
+      const matched = obstacles.find(
+        (o) =>
+          Math.abs(o.location.lat - primaryBarrier.location.lat) < 0.0006 &&
+          Math.abs(o.location.lon - primaryBarrier.location.lon) < 0.0006
+      ) || obstacles.find((o) => o.type === primaryBarrier.type);
+
+      if (matched) {
+        const marker = obstacleMarkersRef.current.get(matched.id);
+        if (marker) {
+          const timer = setTimeout(() => {
+            marker.openPopup();
+          }, 350);
+          return () => clearTimeout(timer);
+        }
+      }
+    }
+  }, [shortestRoute, activeProfile, obstacles]);
 
   // Render Routes according to Route Display Switcher (Accessible | Shortest | Compare Both)
   useEffect(() => {

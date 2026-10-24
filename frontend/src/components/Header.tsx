@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Menu, X, Compass, MapPin, Eye, BarChart3, Wrench } from 'lucide-react';
+import { Menu, X, Compass, MapPin, Eye, Wrench } from 'lucide-react';
 import { ConnectionState } from '../types';
 
 interface HeaderProps {
@@ -49,6 +49,21 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Center: Clean Nav Links (Desktop) */}
       <nav className="hidden md:flex items-center gap-1 text-xs font-medium">
         <NavLink
+          to="/"
+          end
+          className={({ isActive }) =>
+            `px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors ${
+              isActive
+                ? 'bg-surface-panel text-white border border-surface-border font-semibold shadow-sm'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-surface-hover/50'
+            }`
+          }
+        >
+          <Compass className="w-3.5 h-3.5 text-cyan-400" />
+          <span>Home</span>
+        </NavLink>
+
+        <NavLink
           to="/route-explorer"
           className={({ isActive }) =>
             `px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors ${
@@ -58,26 +73,12 @@ export const Header: React.FC<HeaderProps> = ({
             }`
           }
         >
-          <MapPin className="w-3.5 h-3.5 text-cyan-400" />
-          <span>Route Map</span>
+          <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+          <span>Explore Routes</span>
         </NavLink>
 
         <NavLink
-          to="/"
-          className={({ isActive }) =>
-            `px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors ${
-              isActive
-                ? 'bg-surface-panel text-white border border-surface-border font-semibold shadow-sm'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-surface-hover/50'
-            }`
-          }
-        >
-          <Compass className="w-3.5 h-3.5 text-slate-400" />
-          <span>Overview</span>
-        </NavLink>
-
-        <NavLink
-          to="/street-vision"
+          to="/report"
           className={({ isActive }) =>
             `px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors ${
               isActive
@@ -87,21 +88,7 @@ export const Header: React.FC<HeaderProps> = ({
           }
         >
           <Eye className="w-3.5 h-3.5 text-purple-400" />
-          <span>StreetVision</span>
-        </NavLink>
-
-        <NavLink
-          to="/accessibility-insights"
-          className={({ isActive }) =>
-            `px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors ${
-              isActive
-                ? 'bg-surface-panel text-white border border-surface-border font-semibold shadow-sm'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-surface-hover/50'
-            }`
-          }
-        >
-          <BarChart3 className="w-3.5 h-3.5 text-blue-400" />
-          <span>Insights</span>
+          <span>Report a Barrier</span>
         </NavLink>
       </nav>
 

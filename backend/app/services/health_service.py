@@ -22,8 +22,8 @@ class HealthService:
         return HealthResponse(
             status="ok",
             service="PATHWISE AI",
-            phase=3,
-            version="0.3.0",
+            phase=2,
+            version="0.2.0",
             timestamp=datetime.now(timezone.utc),
             tagline="Beyond Shortest. Towards Safest.",
             environment=self.environment,

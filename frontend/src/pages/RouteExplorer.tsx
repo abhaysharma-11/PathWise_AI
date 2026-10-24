@@ -51,6 +51,7 @@ export const JAIPUR_LANDMARKS: LandmarkOption[] = [
   { id: 'N12_SOUTH_GATE', name: 'South Gate (Hospital Road Exit)', lat: 26.9095, lon: 75.8190, description: 'South gateway towards SMS Hospital junction' },
   { id: 'N13_BOTANICAL_WALK', name: 'Shaded Botanical Walk', lat: 26.9118, lon: 75.8220, description: 'Tree-canopied corridor with rest benches' },
   { id: 'N14_OUTER_MAINTENANCE', name: 'Outer Boundary Walk (Unverified)', lat: 26.9102, lon: 75.8212, description: 'Outer perimeter service path with unverified surface rating' },
+  { id: 'N15_WEST_GARDEN_PROMENADE', name: 'West Garden Promenade (Smooth Surface)', lat: 26.9132, lon: 75.8160, description: 'Wide smooth concrete promenade avoiding uneven cobblestones' },
 ];
 
 export const RouteExplorer: React.FC = () => {
@@ -63,6 +64,7 @@ export const RouteExplorer: React.FC = () => {
   const [startPoint, setStartPoint] = useState<Coordinate | null>(null);
   const [destPoint, setDestPoint] = useState<Coordinate | null>(null);
   const [profile, setProfile] = useState<RouteProfileType>('wheelchair');
+  const [activeScenarioId, setActiveScenarioId] = useState<string>('demo_stairs_vs_accessible');
   const [routeDisplayMode, setRouteDisplayMode] = useState<RouteDisplayMode>('accessible');
   const [clickMode, setClickMode] = useState<'start' | 'destination' | 'none'>('none');
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -77,7 +79,7 @@ export const RouteExplorer: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<ObstacleFilterCategory>('all');
   const [selectedObstacle, setSelectedObstacle] = useState<ObstacleFeature | null>(null);
   const [selectedSegment, setSelectedSegment] = useState<SegmentFeature | null>(null);
-  const [showSegmentsLayer, setShowSegmentsLayer] = useState<boolean>(true);
+  const [showSegmentsLayer, setShowSegmentsLayer] = useState<boolean>(false);
 
   // Mobile Bottom Sheet / Planner Open State
   const [mobilePlannerOpen, setMobilePlannerOpen] = useState<boolean>(true);
@@ -136,6 +138,7 @@ export const RouteExplorer: React.FC = () => {
         // Preload primary demonstration scenario
         if (config.demo_scenarios.length > 0) {
           const defaultScenario = config.demo_scenarios[0];
+          setActiveScenarioId(defaultScenario.id);
           setStartPoint(defaultScenario.start);
           setDestPoint(defaultScenario.destination);
         }
@@ -213,6 +216,7 @@ export const RouteExplorer: React.FC = () => {
   // Changing Start clears previous results and re-calculates if destination exists
   const handleSetStart = (coord: Coordinate | null) => {
     setStartPoint(coord);
+    setActiveScenarioId('');
     setShortestRoute(null);
     setAccessibleRoute(null);
     setValidationError(null);
@@ -224,6 +228,7 @@ export const RouteExplorer: React.FC = () => {
   // Changing Destination clears previous results and re-calculates if start exists
   const handleSetDest = (coord: Coordinate | null) => {
     setDestPoint(coord);
+    setActiveScenarioId('');
     setShortestRoute(null);
     setAccessibleRoute(null);
     setValidationError(null);
@@ -239,6 +244,7 @@ export const RouteExplorer: React.FC = () => {
     setStartPoint(prevDest);
     setDestPoint(prevStart);
     setClickMode('none');
+    setActiveScenarioId('');
     setShortestRoute(null);
     setAccessibleRoute(null);
     setValidationError(null);
@@ -255,20 +261,26 @@ export const RouteExplorer: React.FC = () => {
     }
   };
 
-  // Handle Demo Route Dropdown selection
-  const handleSelectScenarioId = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const scenarioId = e.target.value;
-    if (!scenarioId || !mapConfig) return;
+  // Handle Scenario selection
+  const handleSelectScenario = (scenarioId: string, recommendedProfile?: RouteProfileType) => {
+    setActiveScenarioId(scenarioId);
+    if (!mapConfig) return;
     const scenario = mapConfig.demo_scenarios.find((s) => s.id === scenarioId);
     if (!scenario) return;
 
+    const chosenProfile = recommendedProfile || profile;
+    if (recommendedProfile) {
+      setProfile(recommendedProfile);
+    }
     setStartPoint(scenario.start);
     setDestPoint(scenario.destination);
     setClickMode('none');
     setSelectedObstacle(null);
+    setSelectedSegment(null);
     setShortestRoute(null);
     setAccessibleRoute(null);
-    handleCalculateRoutes(scenario.start, scenario.destination, profile);
+    setValidationError(null);
+    handleCalculateRoutes(scenario.start, scenario.destination, chosenProfile);
   };
 
   // Handle Map Click to set Start or Destination
@@ -338,37 +350,81 @@ export const RouteExplorer: React.FC = () => {
             </div>
           )}
 
-          {/* Demo Scenario Preset Selector */}
-          <div className="space-y-1">
+          {/* TRY A DEMO JOURNEY Scenario Selector (Mentor Part 3 requirement) */}
+          <div className="space-y-2 p-3 rounded-2xl bg-canvas-950/80 border border-surface-border/80 shadow-inner">
             <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
-              <span className="flex items-center gap-1 text-cyan-400 font-semibold">
+              <span className="flex items-center gap-1.5 text-cyan-400 font-bold uppercase tracking-wider text-[10px]">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Demo Preset</span>
+                <span>TRY A DEMO JOURNEY</span>
               </span>
-              {loadingConfig ? (
+              {loadingConfig && (
                 <span className="flex items-center gap-1 text-[10px] text-cyan-400">
                   <RefreshCw className="w-2.5 h-2.5 animate-spin" />
                   <span>Loading...</span>
                 </span>
-              ) : (
-                <span className="text-[10px] text-slate-500">Jaipur Precinct</span>
               )}
             </div>
 
-            <div className="relative">
-              <select
-                onChange={handleSelectScenarioId}
-                defaultValue="demo_stairs_avoidance"
-                className="w-full bg-canvas-950 border border-surface-border rounded-xl px-3 py-2 text-xs text-slate-200 font-medium appearance-none focus:outline-none focus:border-cyan-500 transition-colors pr-8 cursor-pointer"
-              >
-                {(mapConfig?.demo_scenarios || []).map((sc) => (
-                  <option key={sc.id} value={sc.id} className="bg-canvas-900 text-slate-200">
-                    {sc.title}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="w-4 h-4 text-slate-400 absolute right-2.5 top-2.5 pointer-events-none" />
+            <div className="grid grid-cols-3 gap-1.5">
+              {[
+                {
+                  id: 'demo_stairs_vs_accessible',
+                  label: 'Stairs vs Accessible',
+                  sublabel: 'Wheelchair Detour',
+                  recommendedProfile: 'wheelchair' as RouteProfileType,
+                },
+                {
+                  id: 'demo_surface_comfort',
+                  label: 'Surface Comfort',
+                  sublabel: 'Elderly Smooth Walk',
+                  recommendedProfile: 'elderly' as RouteProfileType,
+                },
+                {
+                  id: 'demo_obstacle_awareness',
+                  label: 'Obstacle Awareness',
+                  sublabel: 'Tactile Guidance',
+                  recommendedProfile: 'blind_low_vision' as RouteProfileType,
+                },
+              ].map((item) => {
+                const isSelected = activeScenarioId === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => handleSelectScenario(item.id, item.recommendedProfile)}
+                    className={`p-2 rounded-xl border text-left transition-all flex flex-col justify-between ${
+                      isSelected
+                        ? 'bg-cyan-950/70 border-cyan-500/80 text-cyan-200 ring-1 ring-cyan-500/40 shadow-sm'
+                        : 'bg-surface-panel/40 border-surface-border/80 text-slate-300 hover:bg-surface-hover/80 hover:text-white'
+                    }`}
+                  >
+                    <div className="font-semibold text-[11px] leading-tight text-slate-100">{item.label}</div>
+                    <div className="text-[9px] font-mono text-cyan-400/80 mt-1 font-medium">{item.sublabel}</div>
+                  </button>
+                );
+              })}
             </div>
+
+            {/* Additional Scenarios Dropdown (e.g. Identical Corridor) */}
+            {(mapConfig?.demo_scenarios || []).length > 3 && (
+              <div className="pt-1">
+                <div className="relative">
+                  <select
+                    value={activeScenarioId}
+                    onChange={(e) => handleSelectScenario(e.target.value)}
+                    className="w-full bg-canvas-900 border border-surface-border/70 rounded-lg px-2.5 py-1.5 text-[11px] text-slate-300 font-medium appearance-none focus:outline-none focus:border-cyan-500 transition-colors pr-7 cursor-pointer"
+                  >
+                    <option value="" disabled>Or choose another scenario...</option>
+                    {(mapConfig?.demo_scenarios || []).map((sc) => (
+                      <option key={sc.id} value={sc.id} className="bg-canvas-900 text-slate-200">
+                        {sc.title}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2 top-2 pointer-events-none" />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Section: FROM / TO Locations */}
@@ -563,6 +619,7 @@ export const RouteExplorer: React.FC = () => {
               shortestRoute={shortestRoute}
               accessibleRoute={accessibleRoute}
               routeDisplayMode={routeDisplayMode}
+              onSetDisplayMode={setRouteDisplayMode}
             />
           )}
 

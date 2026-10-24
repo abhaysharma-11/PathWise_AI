@@ -107,9 +107,28 @@ export function getPrecinctObstacles(_segments: SegmentFeature[]): ObstacleFeatu
       isVerified: true,
       prohibitsWheelchair: false,
     },
+    {
+      id: 'obs_pole_obstruction_east',
+      type: 'blocked_footpath',
+      label: 'POLE OBSTRUCTION',
+      filterCategory: 'caution',
+      severity: 'Caution',
+      color: '#F59E0B',
+      title: 'Mid-Footpath Utility Pole Hazard',
+      description: 'Utility pole positioned in center of pedestrian walkway without detectable tactile warning tiles.',
+      location: { lat: 26.9133, lon: 75.8213, name: 'East Aviary Path Obstruction' },
+      segmentId: 'seg_20_east_direct_walk',
+      segmentName: 'East Aviary Walkway (Utility Pole Obstruction)',
+      surface: 'paved_stone',
+      inclinePct: 0.9,
+      curbRamp: 'yes',
+      impact: 'Serious collision hazard for blind and low-vision pedestrians; bypassable by general walking.',
+      source: 'On-Ground Accessibility Audit (Demo Fixture)',
+      isVerified: true,
+      prohibitsWheelchair: false,
+    },
   ];
 
-  // If segments data has any additional barrier definitions, enrich appropriately
   return obstacles;
 }
 
