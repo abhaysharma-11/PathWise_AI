@@ -1,0 +1,29 @@
+{
+  "image_id": "jaipur_west_heritage_uneven_stone_003",
+  "filename": "jaipur_west_heritage_uneven_stone.jpg",
+  "width": 1280,
+  "height": 720,
+  "location": {
+    "lat": 26.9138,
+    "lon": 75.8163,
+    "name": "West Cultural Allée near Ravindra Manch"
+  },
+  "associated_segment_id": "seg_10_west_gate_to_heritage",
+  "annotations": [
+    {
+      "id": "ann_uneven_001",
+      "label": "Uneven Surface",
+      "barrier_category": "uneven_surface",
+      "bbox_normalized": [0.55, 0.12, 0.94, 0.88],
+      "bbox_pixels": [153, 396, 1126, 676],
+      "confidence": 1.0,
+      "source": "manually_annotated",
+      "verification_status": "human_verified",
+      "model_id": "manual_audit_field_survey",
+      "accessibility_impact": "Disjointed heritage cobblestones with 3-5cm gaps; creates severe wheel chatter, tipping risk for manual chairs, and trip hazard for elderly.",
+      "severity": "medium",
+      "prohibits_wheelchair": false,
+      "notes": "Cost penalty multiplier of 3.8x applied for wheelchair routing."
+    }
+  ]
+}

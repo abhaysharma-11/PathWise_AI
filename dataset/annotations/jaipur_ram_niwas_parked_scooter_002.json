@@ -1,0 +1,29 @@
+{
+  "image_id": "jaipur_ram_niwas_parked_scooter_002",
+  "filename": "jaipur_ram_niwas_parked_scooter.jpg",
+  "width": 1280,
+  "height": 720,
+  "location": {
+    "lat": 26.9150,
+    "lon": 75.8185,
+    "name": "North Gate Central Allée"
+  },
+  "associated_segment_id": "seg_01_north_to_central",
+  "annotations": [
+    {
+      "id": "ann_scooter_001",
+      "label": "motorcycle",
+      "barrier_category": "parked_vehicle_blocking_footpath",
+      "bbox_normalized": [0.42, 0.28, 0.86, 0.72],
+      "bbox_pixels": [358, 302, 921, 619],
+      "confidence": 0.91,
+      "source": "human_confirmed",
+      "verification_status": "human_verified",
+      "model_id": "yolov8n-coco",
+      "accessibility_impact": "Motorcycle parked perpendicularly across the 1.4m concrete walkway, leaving only 0.42m clearance (wheelchairs need minimum 0.90m).",
+      "severity": "critical",
+      "prohibits_wheelchair": true,
+      "notes": "YOLO model detected class 'motorcycle' (conf 0.91); human reviewer confirmed it blocks the footpath segment seg_01_north_to_central."
+    }
+  ]
+}

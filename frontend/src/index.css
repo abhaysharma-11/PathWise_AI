@@ -1,0 +1,146 @@
+@import 'leaflet/dist/leaflet.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  
+  body {
+    @apply bg-canvas-950 text-slate-100 font-sans;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #060A12;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1E2D4A;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2B3F66;
+}
+
+/* Restrained pulse glow utility */
+@keyframes subtle-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.02);
+  }
+}
+
+.animate-subtle-pulse {
+  animation: subtle-pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Leaflet Dark Customizations */
+.leaflet-container {
+  background-color: #060A12 !important;
+  font-family: inherit !important;
+}
+
+/* Custom dark popup styling */
+.leaflet-popup-content-wrapper {
+  background: #0D1527 !important;
+  color: #F1F5F9 !important;
+  border: 1px solid #1E2D4A !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(30, 45, 74, 0.8) !important;
+  padding: 2px !important;
+}
+
+.leaflet-popup-tip {
+  background: #0D1527 !important;
+  border: 1px solid #1E2D4A !important;
+}
+
+.leaflet-popup-close-button {
+  color: #94A3B8 !important;
+  padding: 6px !important;
+}
+
+.leaflet-popup-close-button:hover {
+  color: #F8FAFC !important;
+}
+
+/* Custom map controls */
+.leaflet-control-zoom a {
+  background-color: #0D1527 !important;
+  color: #22D3EE !important;
+  border-color: #1E2D4A !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background-color: #172545 !important;
+  color: #38BDF8 !important;
+}
+
+.leaflet-control-attribution {
+  background: rgba(6, 10, 18, 0.85) !important;
+  color: #64748B !important;
+  font-size: 10px !important;
+}
+
+.leaflet-control-attribution a {
+  color: #22D3EE !important;
+}
+
+/* Custom Obstacle Marker Container */
+.custom-obstacle-marker-container {
+  background: transparent !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+}
+
+.custom-map-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Tooltip dark customization */
+.leaflet-tooltip {
+  background: #0D1527 !important;
+  color: #F1F5F9 !important;
+  border: 1px solid #1E2D4A !important;
+  border-radius: 8px !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.7) !important;
+  font-family: inherit !important;
+  padding: 6px 10px !important;
+}
+
+.leaflet-tooltip-top:before {
+  border-top-color: #0D1527 !important;
+}
+
+.leaflet-tooltip-bottom:before {
+  border-bottom-color: #0D1527 !important;
+}
+
+.leaflet-tooltip-left:before {
+  border-left-color: #0D1527 !important;
+}
+
+.leaflet-tooltip-right:before {
+  border-right-color: #0D1527 !important;
+}
+

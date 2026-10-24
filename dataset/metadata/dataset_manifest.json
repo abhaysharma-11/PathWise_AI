@@ -1,0 +1,126 @@
+{
+  "dataset_name": "PATHWISE AI Indian Pedestrian Street Imagery (Jaipur Demonstration Subset)",
+  "version": "1.0.0",
+  "created_at": "2026-10-24T12:00:00Z",
+  "precinct": "Ram Niwas Garden & Albert Hall Cultural Precinct, Jaipur, Rajasthan, India",
+  "bounding_box": {
+    "south": 26.9085,
+    "north": 26.9168,
+    "west": 75.8145,
+    "east": 75.8240
+  },
+  "classes": [
+    {
+      "id": "stairs",
+      "display_name": "Stairs / Steps",
+      "severity": "critical",
+      "detection_method": "manual_annotation",
+      "yolo_pretrain_coverage": false
+    },
+    {
+      "id": "missing_curb_ramp",
+      "display_name": "Missing Kerb Ramp",
+      "severity": "critical",
+      "detection_method": "manual_annotation",
+      "yolo_pretrain_coverage": false
+    },
+    {
+      "id": "broken_footpath",
+      "display_name": "Broken Footpath",
+      "severity": "high",
+      "detection_method": "manual_annotation",
+      "yolo_pretrain_coverage": false
+    },
+    {
+      "id": "missing_footpath",
+      "display_name": "Missing Footpath",
+      "severity": "critical",
+      "detection_method": "manual_annotation",
+      "yolo_pretrain_coverage": false
+    },
+    {
+      "id": "pole_obstruction",
+      "display_name": "Pole Obstruction",
+      "severity": "high",
+      "detection_method": "manual_annotation",
+      "yolo_pretrain_coverage": false
+    },
+    {
+      "id": "parked_vehicle_blocking_footpath",
+      "display_name": "Parked Vehicle Blocking Footpath",
+      "severity": "critical",
+      "detection_method": "hybrid_yolo_plus_human_verification",
+      "yolo_pretrain_coverage": true
+    },
+    {
+      "id": "uneven_surface",
+      "display_name": "Uneven Surface / Cobblestones",
+      "severity": "medium",
+      "detection_method": "manual_annotation",
+      "yolo_pretrain_coverage": false
+    }
+  ],
+  "sample_images": [
+    {
+      "image_id": "jaipur_albert_hall_stairs_001",
+      "filename": "jaipur_albert_hall_stairs.jpg",
+      "title": "Monumental Heritage Staircase at Albert Hall Museum",
+      "location": {
+        "lat": 26.9130,
+        "lon": 75.8189,
+        "name": "Albert Hall North Terrace"
+      },
+      "associated_segment_id": "seg_05_monumental_stairs",
+      "primary_barrier": "stairs",
+      "secondary_barrier": "missing_curb_ramp",
+      "source": "manual_audit_field_survey",
+      "verification_status": "human_verified",
+      "accessibility_impact": "Completely impassable for wheelchairs (18 steep steps, 16.5% grade). Diverts route to Rose Garden ramp promenade."
+    },
+    {
+      "image_id": "jaipur_ram_niwas_parked_scooter_002",
+      "filename": "jaipur_ram_niwas_parked_scooter.jpg",
+      "title": "Two-Wheeler Parked Across North Gate Footway",
+      "location": {
+        "lat": 26.9150,
+        "lon": 75.8185,
+        "name": "North Gate Central Allée"
+      },
+      "associated_segment_id": "seg_01_north_to_central",
+      "primary_barrier": "parked_vehicle_blocking_footpath",
+      "source": "ai_detected_with_human_confirmation",
+      "verification_status": "human_verified",
+      "accessibility_impact": "Motorcycle parked perpendicularly across 1.4m walkway reducing clear width to 0.45m (insufficient for standard 0.85m wheelchair width)."
+    },
+    {
+      "image_id": "jaipur_west_heritage_uneven_stone_003",
+      "filename": "jaipur_west_heritage_uneven_stone.jpg",
+      "title": "Historic Uneven Cobblestones at Ravindra Manch Approach",
+      "location": {
+        "lat": 26.9138,
+        "lon": 75.8163,
+        "name": "West Cultural Allée"
+      },
+      "associated_segment_id": "seg_10_west_gate_to_heritage",
+      "primary_barrier": "uneven_surface",
+      "source": "manual_audit_field_survey",
+      "verification_status": "human_verified",
+      "accessibility_impact": "Irregular stone joints (>35mm vertical relief) causing excessive vibration and wheel caster jamming for wheelchairs."
+    },
+    {
+      "image_id": "jaipur_rose_garden_accessible_ramp_004",
+      "filename": "jaipur_rose_garden_accessible_ramp.jpg",
+      "title": "Certified Step-Free Ramped Walkway at Rose Garden",
+      "location": {
+        "lat": 26.9136,
+        "lon": 75.8208,
+        "name": "East Rose Garden Bypass Entry"
+      },
+      "associated_segment_id": "seg_07_central_to_east_ramp",
+      "primary_barrier": null,
+      "source": "manual_audit_field_survey",
+      "verification_status": "human_verified",
+      "accessibility_impact": "Safe accessible infrastructure: 1:16 continuous gradient, dual handrails, tactile directional pavers, zero step barriers."
+    }
+  ]
+}

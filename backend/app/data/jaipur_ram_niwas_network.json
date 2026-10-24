@@ -1,0 +1,463 @@
+{
+  "metadata": {
+    "name": "Jaipur Ram Niwas Garden & Albert Hall Cultural Precinct",
+    "city": "Jaipur",
+    "state": "Rajasthan",
+    "country": "India",
+    "center": {
+      "lat": 26.9124,
+      "lon": 75.8193
+    },
+    "default_zoom": 17,
+    "bounding_box": {
+      "south": 26.9085,
+      "north": 26.9168,
+      "west": 75.8145,
+      "east": 75.8240
+    },
+    "data_source_mode": "Demonstration Dataset with Explicit Accessibility Attributes",
+    "attribution": "Base geometry based on OpenStreetMap pedestrian ways in Ram Niwas Bagh, Jaipur. Manually audited accessibility annotations for PATHWISE AI Phase 2."
+  },
+  "nodes": [
+    {
+      "id": "N1_NORTH_GATE",
+      "name": "North Gate (New Gate Entrance)",
+      "lat": 26.9158,
+      "lon": 75.8185,
+      "description": "Pedestrian entrance from New Gate / JLN Marg"
+    },
+    {
+      "id": "N2_CENTRAL_JUNCTION",
+      "name": "Central Promenade Fountain",
+      "lat": 26.9142,
+      "lon": 75.8186,
+      "description": "Central circular pedestrian hub connecting north, east and west gardens"
+    },
+    {
+      "id": "N3_WEST_GATE",
+      "name": "West Gate (Ravindra Manch)",
+      "lat": 26.9145,
+      "lon": 75.8158,
+      "description": "Access to open-air theatre and cultural exhibition hall"
+    },
+    {
+      "id": "N4_EAST_GATE",
+      "name": "East Gate (Zoo & Aviary Walk)",
+      "lat": 26.9140,
+      "lon": 75.8222,
+      "description": "Eastern pedestrian portal near Jaipur Zoo"
+    },
+    {
+      "id": "N5_STAIRS_TOP",
+      "name": "Museum North Terrace (Top of Steps)",
+      "lat": 26.9133,
+      "lon": 75.8188,
+      "description": "Upper promenade overlook directly facing Albert Hall north facade"
+    },
+    {
+      "id": "N6_STAIRS_BOTTOM",
+      "name": "Lower Museum Forecourt",
+      "lat": 26.9127,
+      "lon": 75.8190,
+      "description": "Lower cobblestone courtyard below the monumental stairs"
+    },
+    {
+      "id": "N7_ALBERT_HALL_PLAZA",
+      "name": "Albert Hall Main Museum Plaza",
+      "lat": 26.9122,
+      "lon": 75.8193,
+      "description": "Main visitor ticketing plaza and accessible museum entrance"
+    },
+    {
+      "id": "N8_EAST_RAMP_ENTRY",
+      "name": "East Rose Garden Ramped Entry",
+      "lat": 26.9136,
+      "lon": 75.8208,
+      "description": "Beginning of certified accessible ramped pathway"
+    },
+    {
+      "id": "N9_EAST_MUSEUM_APPROACH",
+      "name": "East Museum Approach (Tactile Paved)",
+      "lat": 26.9125,
+      "lon": 75.8205,
+      "description": "Flush curb junction with tactile guidance tiles to main plaza"
+    },
+    {
+      "id": "N10_WEST_HERITAGE_WALK",
+      "name": "West Heritage Walk",
+      "lat": 26.9130,
+      "lon": 75.8168,
+      "description": "Historic pathway paved with heritage uneven cobblestones"
+    },
+    {
+      "id": "N11_SOUTH_GARDENS",
+      "name": "South Flower Gardens",
+      "lat": 26.9110,
+      "lon": 75.8192,
+      "description": "Connecting pathway to south lawn"
+    },
+    {
+      "id": "N12_SOUTH_GATE",
+      "name": "South Gate (Hospital Road Exit)",
+      "lat": 26.9095,
+      "lon": 75.8190,
+      "description": "South gateway towards SMS Hospital junction"
+    },
+    {
+      "id": "N13_BOTANICAL_WALK",
+      "name": "Shaded Botanical Walk",
+      "lat": 26.9118,
+      "lon": 75.8220,
+      "description": "Tree-canopied corridor with rest benches"
+    },
+    {
+      "id": "N14_OUTER_MAINTENANCE",
+      "name": "Outer Boundary Walk (Unverified)",
+      "lat": 26.9102,
+      "lon": 75.8212,
+      "description": "Outer perimeter service path with unverified surface rating"
+    }
+  ],
+  "edges": [
+    {
+      "id": "seg_01_north_to_central",
+      "u": "N1_NORTH_GATE",
+      "v": "N2_CENTRAL_JUNCTION",
+      "name": "North Gate Central Allée",
+      "highway": "footway",
+      "surface": "smooth_concrete",
+      "is_verified": true,
+      "curb_ramp": "yes",
+      "has_stairs": false,
+      "incline_pct": 0.8,
+      "tactile_paving": true,
+      "barrier": null,
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9158, 75.8185],
+        [26.9150, 75.8185],
+        [26.9142, 75.8186]
+      ]
+    },
+    {
+      "id": "seg_02_central_to_west",
+      "u": "N2_CENTRAL_JUNCTION",
+      "v": "N3_WEST_GATE",
+      "name": "Ravindra Manch Link",
+      "highway": "pedestrian",
+      "surface": "asphalt",
+      "is_verified": true,
+      "curb_ramp": "yes",
+      "has_stairs": false,
+      "incline_pct": 1.2,
+      "tactile_paving": false,
+      "barrier": null,
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9142, 75.8186],
+        [26.9143, 75.8172],
+        [26.9145, 75.8158]
+      ]
+    },
+    {
+      "id": "seg_03_central_to_east",
+      "u": "N2_CENTRAL_JUNCTION",
+      "v": "N4_EAST_GATE",
+      "name": "East Aviary Link",
+      "highway": "pedestrian",
+      "surface": "asphalt",
+      "is_verified": true,
+      "curb_ramp": "yes",
+      "has_stairs": false,
+      "incline_pct": 1.0,
+      "tactile_paving": false,
+      "barrier": null,
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9142, 75.8186],
+        [26.9141, 75.8204],
+        [26.9140, 75.8222]
+      ]
+    },
+    {
+      "id": "seg_04_central_to_stairs_top",
+      "u": "N2_CENTRAL_JUNCTION",
+      "v": "N5_STAIRS_TOP",
+      "name": "Museum Axis North Path",
+      "highway": "footway",
+      "surface": "smooth_concrete",
+      "is_verified": true,
+      "curb_ramp": "yes",
+      "has_stairs": false,
+      "incline_pct": 1.5,
+      "tactile_paving": false,
+      "barrier": null,
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9142, 75.8186],
+        [26.9137, 75.8187],
+        [26.9133, 75.8188]
+      ]
+    },
+    {
+      "id": "seg_05_monumental_stairs",
+      "u": "N5_STAIRS_TOP",
+      "v": "N6_STAIRS_BOTTOM",
+      "name": "Monumental Heritage Staircase (18 Steps)",
+      "highway": "steps",
+      "surface": "stone_stairs",
+      "is_verified": true,
+      "curb_ramp": "no",
+      "has_stairs": true,
+      "incline_pct": 16.5,
+      "tactile_paving": false,
+      "barrier": "stairs",
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9133, 75.8188],
+        [26.9130, 75.8189],
+        [26.9127, 75.8190]
+      ]
+    },
+    {
+      "id": "seg_06_stairs_bottom_to_plaza",
+      "u": "N6_STAIRS_BOTTOM",
+      "v": "N7_ALBERT_HALL_PLAZA",
+      "name": "North Forecourt Walk",
+      "highway": "pedestrian",
+      "surface": "paved_stone",
+      "is_verified": true,
+      "curb_ramp": "yes",
+      "has_stairs": false,
+      "incline_pct": 0.5,
+      "tactile_paving": false,
+      "barrier": null,
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9127, 75.8190],
+        [26.9124, 75.8192],
+        [26.9122, 75.8193]
+      ]
+    },
+    {
+      "id": "seg_07_central_to_east_ramp",
+      "u": "N2_CENTRAL_JUNCTION",
+      "v": "N8_EAST_RAMP_ENTRY",
+      "name": "Rose Garden Bypass Promenade",
+      "highway": "footway",
+      "surface": "smooth_concrete",
+      "is_verified": true,
+      "curb_ramp": "yes",
+      "has_stairs": false,
+      "incline_pct": 1.2,
+      "tactile_paving": true,
+      "barrier": null,
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9142, 75.8186],
+        [26.9140, 75.8198],
+        [26.9136, 75.8208]
+      ]
+    },
+    {
+      "id": "seg_08_east_ramp_to_approach",
+      "u": "N8_EAST_RAMP_ENTRY",
+      "v": "N9_EAST_MUSEUM_APPROACH",
+      "name": "East Accessible Ramp Connector",
+      "highway": "footway",
+      "surface": "smooth_concrete",
+      "is_verified": true,
+      "curb_ramp": "yes",
+      "has_stairs": false,
+      "incline_pct": 1.8,
+      "tactile_paving": true,
+      "barrier": null,
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9136, 75.8208],
+        [26.9130, 75.8207],
+        [26.9125, 75.8205]
+      ]
+    },
+    {
+      "id": "seg_09_east_approach_to_plaza",
+      "u": "N9_EAST_MUSEUM_APPROACH",
+      "v": "N7_ALBERT_HALL_PLAZA",
+      "name": "East Plaza Flush Walkway",
+      "highway": "pedestrian",
+      "surface": "smooth_concrete",
+      "is_verified": true,
+      "curb_ramp": "yes",
+      "has_stairs": false,
+      "incline_pct": 0.4,
+      "tactile_paving": true,
+      "barrier": null,
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9125, 75.8205],
+        [26.9123, 75.8199],
+        [26.9122, 75.8193]
+      ]
+    },
+    {
+      "id": "seg_10_west_gate_to_heritage",
+      "u": "N3_WEST_GATE",
+      "v": "N10_WEST_HERITAGE_WALK",
+      "name": "West Cultural Allée",
+      "highway": "footway",
+      "surface": "uneven_cobblestone",
+      "is_verified": true,
+      "curb_ramp": "no",
+      "has_stairs": false,
+      "incline_pct": 3.8,
+      "tactile_paving": false,
+      "barrier": "uneven_surface",
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9145, 75.8158],
+        [26.9138, 75.8163],
+        [26.9130, 75.8168]
+      ]
+    },
+    {
+      "id": "seg_11_heritage_to_plaza",
+      "u": "N10_WEST_HERITAGE_WALK",
+      "v": "N7_ALBERT_HALL_PLAZA",
+      "name": "West Plaza Cobblestone Path",
+      "highway": "footway",
+      "surface": "uneven_cobblestone",
+      "is_verified": true,
+      "curb_ramp": "yes",
+      "has_stairs": false,
+      "incline_pct": 2.2,
+      "tactile_paving": false,
+      "barrier": "uneven_surface",
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9130, 75.8168],
+        [26.9126, 75.8180],
+        [26.9122, 75.8193]
+      ]
+    },
+    {
+      "id": "seg_12_plaza_to_south_gardens",
+      "u": "N7_ALBERT_HALL_PLAZA",
+      "v": "N11_SOUTH_GARDENS",
+      "name": "Museum South Forecourt",
+      "highway": "pedestrian",
+      "surface": "smooth_concrete",
+      "is_verified": true,
+      "curb_ramp": "yes",
+      "has_stairs": false,
+      "incline_pct": 0.5,
+      "tactile_paving": true,
+      "barrier": null,
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9122, 75.8193],
+        [26.9116, 75.8192],
+        [26.9110, 75.8192]
+      ]
+    },
+    {
+      "id": "seg_13_south_gardens_to_south_gate",
+      "u": "N11_SOUTH_GARDENS",
+      "v": "N12_SOUTH_GATE",
+      "name": "South Promenade to Hospital Gate",
+      "highway": "footway",
+      "surface": "asphalt",
+      "is_verified": true,
+      "curb_ramp": "yes",
+      "has_stairs": false,
+      "incline_pct": 1.0,
+      "tactile_paving": false,
+      "barrier": null,
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9110, 75.8192],
+        [26.9102, 75.8191],
+        [26.9095, 75.8190]
+      ]
+    },
+    {
+      "id": "seg_14_east_gate_to_botanical",
+      "u": "N4_EAST_GATE",
+      "v": "N13_BOTANICAL_WALK",
+      "name": "Botanical Aviary Shaded Path",
+      "highway": "footway",
+      "surface": "paved_stone",
+      "is_verified": true,
+      "curb_ramp": "yes",
+      "has_stairs": false,
+      "incline_pct": 0.8,
+      "tactile_paving": false,
+      "barrier": null,
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9140, 75.8222],
+        [26.9128, 75.8221],
+        [26.9118, 75.8220]
+      ]
+    },
+    {
+      "id": "seg_15_approach_to_botanical",
+      "u": "N9_EAST_MUSEUM_APPROACH",
+      "v": "N13_BOTANICAL_WALK",
+      "name": "Rose Garden to Botanical Connector",
+      "highway": "footway",
+      "surface": "smooth_concrete",
+      "is_verified": true,
+      "curb_ramp": "yes",
+      "has_stairs": false,
+      "incline_pct": 1.1,
+      "tactile_paving": false,
+      "barrier": null,
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9125, 75.8205],
+        [26.9121, 75.8212],
+        [26.9118, 75.8220]
+      ]
+    },
+    {
+      "id": "seg_16_botanical_to_maintenance",
+      "u": "N13_BOTANICAL_WALK",
+      "v": "N14_OUTER_MAINTENANCE",
+      "name": "Perimeter Service Path (Unverified)",
+      "highway": "path",
+      "surface": "unverified",
+      "is_verified": false,
+      "curb_ramp": "unverified",
+      "has_stairs": false,
+      "incline_pct": 2.5,
+      "tactile_paving": false,
+      "barrier": null,
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9118, 75.8220],
+        [26.9110, 75.8216],
+        [26.9102, 75.8212]
+      ]
+    },
+    {
+      "id": "seg_17_maintenance_to_south_gardens",
+      "u": "N14_OUTER_MAINTENANCE",
+      "v": "N11_SOUTH_GARDENS",
+      "name": "South Outer Connection (Unverified)",
+      "highway": "path",
+      "surface": "unverified",
+      "is_verified": false,
+      "curb_ramp": "unverified",
+      "has_stairs": false,
+      "incline_pct": 2.0,
+      "tactile_paving": false,
+      "barrier": null,
+      "data_source": "demo_annotated_fixture",
+      "coordinates": [
+        [26.9102, 75.8212],
+        [26.9106, 75.8202],
+        [26.9110, 75.8192]
+      ]
+    }
+  ]
+}

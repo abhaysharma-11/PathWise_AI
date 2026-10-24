@@ -1,0 +1,69 @@
+# Node / Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+.env
+.env.local
+.env.production
+.env.development
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Python / Backend
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+.mypy_cache/
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Secrets & Keys
+*.pem
+*.key
+*.cert
+
+# PATHWISE AI - Local Data
+uploads/
+backend/uploads/
+*.db
+*.sqlite3
+
+# AI Model Weights
+*.pt
+*.pth
+*.onnx
+
+# Local Street Imagery
+dataset/images/
+backend/dataset/images/
+
+# Additional Environment Files
+.env.*
+!.env.example
+!.env.*.example
+
+# Temporary Files
+*.tmp
+*.log

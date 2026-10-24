@@ -1,0 +1,32 @@
+[
+  {
+    "id": "hz-001",
+    "type": "temporary_construction",
+    "description": "Scaffolding narrowing usable walkway width to < 0.9m",
+    "coordinates": [-73.9848, 40.7488],
+    "severity": "high",
+    "impact_profiles": ["wheelchair_user", "stroller"],
+    "verified_by_cv": false,
+    "created_at": "2026-10-24T08:00:00Z"
+  },
+  {
+    "id": "hz-002",
+    "type": "pavement_defect",
+    "description": "Tree root heave with vertical displacement > 4cm",
+    "coordinates": [-73.9836, 40.7495],
+    "severity": "medium",
+    "impact_profiles": ["wheelchair_user", "low_vision"],
+    "verified_by_cv": false,
+    "created_at": "2026-10-24T08:15:00Z"
+  },
+  {
+    "id": "hz-003",
+    "type": "missing_curb_cut",
+    "description": "Step down without ramp transition to crosswalk",
+    "coordinates": [-73.9822, 40.7501],
+    "severity": "critical",
+    "impact_profiles": ["wheelchair_user", "mobility_impaired"],
+    "verified_by_cv": false,
+    "created_at": "2026-10-24T08:30:00Z"
+  }
+]

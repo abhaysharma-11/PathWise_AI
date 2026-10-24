@@ -1,0 +1,86 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "dataset": "PATHWISE AI Pedestrian Micro-Segments Sample",
+    "version": "1.0-alpha",
+    "phase": 1,
+    "description": "Geospatial sample data showing schema for accessibility-weighted pedestrian graph construction."
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "seg-001",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-73.9855, 40.7484],
+          [-73.9842, 40.7491]
+        ]
+      },
+      "properties": {
+        "segment_id": "seg-001",
+        "street_name": "5th Avenue (East Sidewalk)",
+        "surface": "smooth_concrete",
+        "width_meters": 3.2,
+        "curb_ramp_installed": true,
+        "curb_ramp_grade_pct": 4.5,
+        "tactile_paving": true,
+        "lighting_score": 0.88,
+        "incline_pct": 1.2,
+        "accessible_crossing": true,
+        "audible_signals": true,
+        "safety_score_preliminary": 0.94
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "seg-002",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-73.9842, 40.7491],
+          [-73.9830, 40.7498]
+        ]
+      },
+      "properties": {
+        "segment_id": "seg-002",
+        "street_name": "E 34th Street (North Sidewalk)",
+        "surface": "brick_pavers",
+        "width_meters": 1.8,
+        "curb_ramp_installed": true,
+        "curb_ramp_grade_pct": 7.8,
+        "tactile_paving": false,
+        "lighting_score": 0.65,
+        "incline_pct": 3.4,
+        "accessible_crossing": false,
+        "audible_signals": false,
+        "safety_score_preliminary": 0.68
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "seg-003",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-73.9830, 40.7498],
+          [-73.9818, 40.7505]
+        ]
+      },
+      "properties": {
+        "segment_id": "seg-003",
+        "street_name": "Madison Avenue Crossing",
+        "surface": "asphalt_crosswalk",
+        "width_meters": 4.0,
+        "curb_ramp_installed": true,
+        "curb_ramp_grade_pct": 5.0,
+        "tactile_paving": true,
+        "lighting_score": 0.92,
+        "incline_pct": 0.5,
+        "accessible_crossing": true,
+        "audible_signals": true,
+        "safety_score_preliminary": 0.96
+      }
+    }
+  ]
+}

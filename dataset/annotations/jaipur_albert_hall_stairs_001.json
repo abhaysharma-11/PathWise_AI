@@ -1,0 +1,44 @@
+{
+  "image_id": "jaipur_albert_hall_stairs_001",
+  "filename": "jaipur_albert_hall_stairs.jpg",
+  "width": 1280,
+  "height": 720,
+  "location": {
+    "lat": 26.9130,
+    "lon": 75.8189,
+    "name": "Monumental Heritage Staircase, Albert Hall North Forecourt"
+  },
+  "associated_segment_id": "seg_05_monumental_stairs",
+  "annotations": [
+    {
+      "id": "ann_stairs_001",
+      "label": "Stairs / Steps",
+      "barrier_category": "stairs",
+      "bbox_normalized": [0.32, 0.18, 0.82, 0.84],
+      "bbox_pixels": [230, 230, 1075, 590],
+      "confidence": 1.0,
+      "source": "manually_annotated",
+      "verification_status": "human_verified",
+      "model_id": "manual_audit_field_survey",
+      "accessibility_impact": "18 steep heritage sandstone steps with no curb cut ramp. Complete barrier for wheelchair and stroller navigation.",
+      "severity": "critical",
+      "prohibits_wheelchair": true,
+      "notes": "Verified in person at Albert Hall North Terrace entrance. Diverts wheelchair routes toward Rose Garden ramped promenade."
+    },
+    {
+      "id": "ann_missing_curb_002",
+      "label": "Missing Kerb Ramp",
+      "barrier_category": "missing_curb_ramp",
+      "bbox_normalized": [0.75, 0.22, 0.92, 0.78],
+      "bbox_pixels": [281, 540, 998, 662],
+      "confidence": 1.0,
+      "source": "manually_annotated",
+      "verification_status": "human_verified",
+      "model_id": "manual_audit_field_survey",
+      "accessibility_impact": "Vertical step drop > 15cm from upper promenade with no transition ramp.",
+      "severity": "critical",
+      "prohibits_wheelchair": true,
+      "notes": "Transition curb cut required to connect with lower plaza level."
+    }
+  ]
+}
