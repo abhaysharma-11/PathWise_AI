@@ -1,62 +1,105 @@
-# PATHWISE AI
 
-> **"Beyond Shortest. Towards Safest."**  
-> A hackathon-ready accessible pedestrian navigation platform engineered for the Hypnexis 2026 Hackathon at Manipal University Jaipur.
-> 
-> **Problem Statement:** SC-02 — Accessible Walking Routes from Street Imagery (Original Problem + Phase 2 Extension + Premium Consumer UX).
+<div align="center">
+
+# PATHWISE AI ♿
+
+### Beyond Shortest. Towards Safest.
+
+**An AI-powered accessibility-aware pedestrian navigation platform.**
+
+Developed for **HypNexis 2026 | Manipal University Jaipur**
+
+**Problem Statement: SC-02 — Accessible Walking Routes from Street Imagery**
+
+Original Problem Statement + Phase 2 Extension
+
+<br>
+
+### 🚀 [EXPLORE LIVE APPLICATION](https://path-wise-ai-one.vercel.app/)
+
+[![Live Website](https://img.shields.io/badge/Live_Website-Vercel-00C7B7?style=for-the-badge)](https://path-wise-ai-one.vercel.app/)
+[![Backend](https://img.shields.io/badge/Backend-Render-46E3B7?style=for-the-badge)](https://pathwise-ai-backend-vog9.onrender.com/api/health)
+![React](https://img.shields.io/badge/React-TypeScript-3178C6?style=for-the-badge)
+![Python](https://img.shields.io/badge/Python-FastAPI-009688?style=for-the-badge)
+
+</div>
 
 ---
 
-## 🌟 Solution Overview
+## 🌍 The Problem
 
-Standard navigation platforms (Google Maps, Apple Maps) optimize exclusively for motorized distance or walking time, directing wheelchair users and visually impaired pedestrians onto footpaths obstructed by steep heritage stairs, missing curb ramps, utility poles, uneven stones, and parked scooters.
+**The shortest route is not always the most accessible route.**
 
-**PATHWISE AI** solves this with a complete full-stack platform:
-1. **Interactive Accessible Routing**: NetworkX pedestrian graph engine serving Jaipur's Ram Niwas Garden & Albert Hall precinct with Dijkstra routing and profile-specific impedance weighting.
-2. **Four Mobility Profiles**:
-   - ♿ **Wheelchair / Stroller**: Strictly step-free (inf cost for stairs, missing curb ramps, incline > 8.33%, vehicle blockages).
-   - 👁️ **Blind / Low Vision**: Strongly prioritizes continuous tactile guidance paths (0.75x bonus); severely penalizes pole obstructions (12x), parked vehicles (12x), missing footpaths (15x), and uneven cobblestones (6x).
-   - 🤝 **Elderly / Assisted**: Avoids stairs (12x) and steep inclines > 5% (4x); minimizes tripping hazards.
-   - 🚶 **General Pedestrian**: Direct walking with mild slope weighting.
-3. **StreetVision AI & Citizen Reporting (SC-02 Extension)**:
-   - Real pretrained YOLOv8 nano object detection for mobility-relevant obstacles (vehicles, motorcycles, bicycles).
-   - Real EXIF GPS extraction (`piexif`) from uploaded street photography.
-   - 7 explicit barrier categories: Stairs, Missing Kerb Ramp, Broken Footpath, Missing Footpath, Pole Obstruction, Parked Vehicle, Uneven Surface.
-   - Clear provenance distinction: **AI Suggested**, **Human Confirmed**, and **Manually Reported**.
-   - SQLite persistence (`backend/app/data/reports.db`) and dynamic NetworkX graph overlay without corrupting baseline geometry.
-4. **Temporary Barrier Lifecycle & Automated Expiration**:
-   - Temporary obstacles (parked delivery scooters, street vendors, construction work zones) support configurable expiration: **60 Seconds (Live Hackathon Demo)**, 1 Hour, 24 Hours, 7 Days.
-   - When expired, barriers are marked inactive in SQLite, automatically removed from active graph overlay, and the pristine baseline route is restored within 60 seconds without page reload.
-5. **Honest Route Confidence & Missing Imagery Coverage**:
-   - Deterministic length-weighted evidence formula:
-     $$\text{Score} = \text{round}\left(100 \times (0.60 \times R_{\text{imagery}} + 0.40 \times R_{\text{verified}})\right)$$
-   - Categorized honestly as **High Evidence** ($\ge 75$), **Moderate Evidence** ($45-74$), or **Limited Evidence** ($< 45$).
-   - Explicitly reports traversed segments, segments with recent imagery (< 90-day threshold), and segments with no recent street imagery.
-   - Transparent safety disclaimer: *"Confidence reflects available accessibility evidence, not a guarantee of physical safety."*
-6. **Simplified Premium UX**:
-   - **Page 1: Home (`/`)**: Consumer landing page featuring real demo route comparisons and 3 core feature pillars.
-   - **Page 2: Explore Routes (`/route-explorer`)**: Map-first navigation planner with 4 travel modes, 3 display modes (Accessible Route, Shortest Route, Compare Both), honest confidence card, and live 8s barrier polling.
-   - **Page 3: Report a Barrier (`/report` & `/street-vision`)**: 4-step reporting wizard (Add Photo $\to$ Identify Problem $\to$ Confirm Location $\to$ Submit Report) with live auto-expiration trigger and active reports management table.
+Conventional navigation platforms primarily optimise distance and travel time. However, pedestrians with different mobility needs can encounter barriers that ordinary navigation systems may not adequately represent.
+
+A wheelchair user might encounter stairs or a missing kerb ramp. A blind or low-vision pedestrian may face poles, parked vehicles or obstructed walkways. An elderly pedestrian may struggle with uneven surfaces or steep inclines.
+
+Even a previously accessible route can become unusable because of a temporary obstruction.
+
+PATHWISE AI addresses this gap by incorporating **street-level accessibility evidence into pedestrian route planning.**
+
+---
+
+## 💡 Our Solution
+
+PATHWISE AI combines computer vision, citizen reporting, pedestrian-network intelligence and mobility-specific routing into a unified navigation platform.
+
+Instead of recommending a path based on distance alone, the system considers known accessibility barriers and calculates alternative routes according to the selected pedestrian profile.
+
+### How PATHWISE AI Works
+
+**Detect → Locate → Update → Reroute → Explain**
+
+1. **Detect:** Identify potential accessibility barriers using street photographs and citizen reports.
+2. **Locate:** Associate a confirmed barrier with the relevant pedestrian-network segment.
+3. **Update:** Incorporate active barriers into the routing graph.
+4. **Reroute:** Calculate routes using mobility-specific accessibility costs.
+5. **Explain:** Present route comparisons, known obstacles and evidence-confidence information.
+
+Our objective is not simply to display another route on a map, but to help users understand **why a particular route is recommended.**
+
+---
+
+## 🌐 Live Deployment
+
+PATHWISE AI is publicly deployed and available for demonstration.
+
+| Service | Live Link |
+|---|---|
+| 🚀 Frontend Application | [Launch PATHWISE AI](https://path-wise-ai-one.vercel.app/) |
+| ⚙️ Backend API | [FastAPI Backend](https://pathwise-ai-backend-vog9.onrender.com) |
+| 🩺 Backend Health Check | [Check API Health](https://pathwise-ai-backend-vog9.onrender.com/api/health) |
+| 📖 Interactive API Documentation | [Swagger UI](https://pathwise-ai-backend-vog9.onrender.com/docs) |
+| 💻 Source Code | [GitHub Repository](https://github.com/abhaysharma-11/PathWise_AI) |
+
+### Deployment Architecture
+
+- **Frontend:** Vercel — React, TypeScript and Vite
+- **Backend:** Render — Python, FastAPI and NetworkX
+- **Computer Vision:** Ultralytics YOLOv8 Nano
+- **Database:** SQLite (prototype storage)
+
+> **Hosting Note:** The backend uses a free hosting instance and may take approximately one minute to respond after inactivity.
+>
+> The application currently demonstrates accessibility-aware routing within a curated Jaipur prototype area. Evidence confidence does not guarantee physical safety.
 
 ---
 
 ## 🖥️ Prototype Output & Application Preview
 
-PATHWISE AI is a functional, locally runnable full-stack prototype developed for **HypNexis 2026**.
+The following screenshots showcase PATHWISE AI's interface, accessibility-aware route planning and StreetVision reporting workflow.
 
-The following screenshots demonstrate the application's user experience, accessibility-aware route planning and StreetVision reporting workflow.
+### 1. Home — Every Journey Deserves an Accessible Path
 
-### 1. Home — Accessible Navigation Starts Here
+A minimal, user-focused landing experience introducing PATHWISE AI and its mission.
 
-A minimal, user-focused landing experience introducing PATHWISE AI and its mission: *Beyond Shortest. Towards Safest.*
-
-![PATHWISE AI Home](screenshots/home.png)
+![PATHWISE AI Home](sample-data/screenshots/home.png.png)
 
 ### 2. Explore Routes — Beyond the Shortest Path
 
-The interactive Route Explorer combines four mobility profiles, accessibility-aware navigation, shortest-route comparison, obstacle visualisation and evidence-based route confidence.
+The interactive Route Explorer combines four mobility profiles, shortest-versus-accessible route comparison, obstacle visualisation and evidence-based route confidence.
 
-![PATHWISE AI Route Explorer](screenshots/route-explorer.png)
+![PATHWISE AI Route Explorer](sample-data/screenshots/route-explorer.png.jpeg)
 
 ### 3. StreetVision AI — See It. Report It. Improve the Route.
 
@@ -64,116 +107,418 @@ StreetVision combines supported AI object detection with human-assisted barrier 
 
 **Add Photo → Identify Problem → Confirm Location → Submit Report**
 
-![PATHWISE AI StreetVision](screenshots/streetvision.png)
+![PATHWISE AI StreetVision](sample-data/screenshots/streetvision.png.jpeg)
 
-### Prototype Availability
+---
 
-The complete source code is available in this repository. The application currently runs locally using React/Vite and Python/FastAPI.
+## ✨ Key Features
 
-**Frontend:** `http://localhost:5173`  
-**Backend:** `http://127.0.0.1:8000`
+### 1. Accessibility-Aware Pedestrian Routing
 
-*These are local development addresses, not publicly accessible deployment URLs. Follow the Quick Start Guide to run the application.*
+PATHWISE AI uses a NetworkX-based pedestrian graph with Dijkstra routing and profile-specific edge weighting.
 
-## 🏗️ Architecture Stack
+Users can explore three route display modes:
+
+- **Accessible Route:** Recommended route based on the selected mobility profile.
+- **Shortest Route:** Distance-oriented pedestrian route.
+- **Compare Both:** Visual comparison of the calculated alternatives.
+
+The application communicates relevant barriers, route distances and accessibility considerations.
+
+### 2. Four Mobility Profiles
+
+Different pedestrians experience the same street differently.
+
+PATHWISE AI supports four mobility profiles with distinct routing preferences and restrictions.
+
+| Mobility Profile | Routing Considerations |
+|---|---|
+| ♿ Wheelchair / Stroller | Step-free routing; restricts confirmed stairs, missing kerb ramps and impassable barriers |
+| 👁️ Blind / Low Vision | Prioritises available tactile-guidance evidence and clear pedestrian paths; penalises relevant obstructions |
+| 🤝 Elderly / Assisted | Strongly discourages stairs, steep inclines and known tripping hazards |
+| 🚶 General Pedestrian | Prioritises shorter valid walking routes with basic pedestrian constraints |
+
+Each profile uses accessibility-aware edge costs in the pedestrian-routing graph.
+
+Different profiles may occasionally return the same route when that is optimal according to the available network and evidence.
+
+### 3. StreetVision AI — Barrier Identification
+
+StreetVision combines computer vision with human-assisted accessibility reporting.
+
+The implementation uses a pretrained YOLOv8 Nano model for supported object-detection classes, including relevant vehicles, motorcycles and bicycles.
+
+For accessibility conditions that generic object detection cannot reliably establish, users can manually identify or correct the barrier category.
+
+**Seven supported reporting categories:**
+
+1. Stairs
+2. Missing Kerb Ramp
+3. Broken Footpath
+4. Missing Footpath
+5. Pole Obstruction
+6. Parked Vehicle
+7. Uneven Surface
+
+Reports distinguish between three evidence sources:
+
+| Classification | Meaning |
+|---|---|
+| AI Suggested | A potential detection generated by the supported model |
+| Human Confirmed | A report reviewed and confirmed by a user |
+| Manually Reported | A barrier identified directly by a user |
+
+This distinction prevents automated suggestions from being presented as verified accessibility facts.
+
+### 4. Citizen Reporting & Dynamic Route Updates
+
+Users can contribute accessibility information through a streamlined reporting workflow:
+
+**Add Photo → Identify Problem → Confirm Location → Submit Report**
+
+The reporting workflow supports image-location metadata where available, including EXIF GPS extraction using `piexif`.
+
+Submitted reports are stored in SQLite and incorporated into a dynamic NetworkX graph overlay without modifying the underlying baseline geometry.
+
+The frontend uses eight-second barrier polling to support the Phase 2 objective of reflecting accepted reports within one minute.
+
+### 5. Temporary Barrier Expiration
+
+Not every accessibility barrier is permanent.
+
+A parked scooter, delivery vehicle or temporary construction obstruction may disappear after a short period.
+
+PATHWISE AI supports configurable temporary-report durations:
+
+| Expiration Option | Purpose |
+|---|---|
+| 60 seconds | Live hackathon demonstration |
+| 1 hour | Short-term obstruction |
+| 24 hours | Temporary daily obstruction |
+| 7 days | Longer temporary condition |
+
+Expired barriers are marked inactive and removed from the active routing overlay.
+
+This allows subsequent route calculations to use the restored baseline network where appropriate.
+
+### 6. Honest Route Confidence
+
+PATHWISE AI distinguishes between a route recommendation and the strength of the accessibility evidence supporting it.
+
+The implemented confidence calculation uses a deterministic, length-weighted evidence formula:
+
+```text
+Score = round(100 × (0.60 × R_imagery + 0.40 × R_verified))
+```
+
+Where:
+
+- `R_imagery` represents length-weighted recent-imagery coverage.
+- `R_verified` represents length-weighted verified-evidence coverage.
+
+**Evidence classifications:**
+
+| Score | Classification |
+|---|---|
+| 75–100 | High Evidence |
+| 45–74 | Moderate Evidence |
+| Below 45 | Limited Evidence |
+
+The system also reports:
+
+- Total traversed route segments.
+- Segments with recent imagery.
+- Segments without recent street imagery.
+- Relevant verification and evidence information.
+
+The recent-imagery threshold is configured as 90 days.
+
+> **Safety Disclaimer:** Confidence reflects available accessibility evidence, not a guarantee of physical safety.
+
+---
+
+## 🏗️ Technology Stack
 
 | Layer | Technologies |
-| :--- | :--- |
-| **Frontend** | React 18, TypeScript, Vite, Tailwind CSS, Leaflet 1.9, React Router v6, Lucide React |
-| **Backend** | Python 3.12.10, FastAPI, Uvicorn, SQLite3 (`reports.db`), NetworkX 3.7, Pydantic v2, python-dotenv |
-| **Computer Vision** | Ultralytics YOLOv8 nano (`yolov8n.pt`), PyTorch, Pillow, Piexif (EXIF GPS extraction) |
-| **Mapping & GIS** | Leaflet 1.9, OpenStreetMap Standard Tiles (No API key needed), Haversine Geodesic Math |
-| **Demonstration Area** | Ram Niwas Garden & Albert Hall Cultural Precinct, Jaipur, Rajasthan, India (`26.9124, 75.8193`) |
+|---|---|
+| Frontend | React 18, TypeScript, Vite, Tailwind CSS |
+| Mapping Interface | Leaflet 1.9, OpenStreetMap |
+| Navigation | React Router v6 |
+| UI Components | Lucide React |
+| Backend | Python 3.12.10, FastAPI, Uvicorn |
+| Routing Engine | NetworkX, Dijkstra Algorithm |
+| Database | SQLite3 |
+| Data Validation | Pydantic v2 |
+| Computer Vision | Ultralytics YOLOv8 Nano, PyTorch |
+| Image Processing | Pillow, Piexif |
+| Geospatial Calculations | Haversine Geodesic Mathematics |
+
+### System Architecture
+
+```text
+                    PATHWISE AI
+                         |
+                  React + TypeScript
+                         |
+                  Leaflet / OSM Map
+                         |
+                    FastAPI REST
+                         |
+           +-------------+-------------+
+           |             |             |
+      Route Engine   StreetVision   Reporting API
+           |             |             |
+        NetworkX     YOLOv8 Nano     SQLite3
+           |             |             |
+           +-------------+-------------+
+                         |
+              Active Barrier Overlay
+                         |
+             Mobility-Specific Routing
+                         |
+           Route Comparison + Confidence
+```
 
 ---
 
-## 🚀 Quick Start Guide
+## 📍 Demonstration Area
+
+### Ram Niwas Garden & Albert Hall Cultural Precinct
+
+**Jaipur, Rajasthan, India**
+
+Approximate reference coordinates:
+
+```text
+26.9124, 75.8193
+```
+
+PATHWISE AI uses a limited, curated Jaipur demonstration network to illustrate its accessibility-routing workflow.
+
+Demonstration annotations and scenario-specific accessibility information should not be interpreted as a comprehensive, independently verified accessibility survey of the entire precinct.
+
+The architecture can be expanded as additional pedestrian-network and street-imagery evidence becomes available.
+
+---
+
+## 🚀 Run Locally (For Developers)
+
+The complete source code is available in this repository.
 
 ### Prerequisites
+
 - Python 3.12+
-- Node.js 18+ and npm
+- Node.js 18+
+- npm
+- Git
 
-### 1. Backend Setup & Startup
-```powershell
-# Navigate to backend directory
+### Step 1 — Clone the Repository
+
+```bash
+git clone https://github.com/abhaysharma-11/PathWise_AI.git
+cd PathWise_AI
+```
+
+### Step 2 — Backend Setup
+
+Navigate to the backend directory:
+
+```bash
 cd backend
+```
 
-# Activate virtual environment
+Create a virtual environment:
+
+```bash
+python -m venv .venv
+```
+
+Activate it on Windows PowerShell:
+
+```powershell
 .\.venv\Scripts\Activate.ps1
+```
 
-# Install dependencies (if not already installed)
-pip install -r requirements.txt
+Install backend dependencies:
 
-# Start FastAPI server daemon
+```bash
+python -m pip install -r requirements.txt
+```
+
+Start FastAPI:
+
+```bash
 python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
-Backend API will be live at `http://127.0.0.1:8000` with interactive Swagger docs at `http://127.0.0.1:8000/docs`.
 
-### 2. Frontend Setup & Startup
-```powershell
-# In a new terminal, navigate to frontend directory
+Keep this terminal running.
+
+### Step 3 — Frontend Setup
+
+Open a second terminal in the project root:
+
+```bash
 cd frontend
+```
 
-# Install npm packages
+Install dependencies:
+
+```bash
 npm install
+```
 
-# Start Vite dev server
+Start the Vite development server:
+
+```bash
 npm run dev
 ```
-Frontend will be live at `http://localhost:5173`.
+
+The application will be available through the local development address displayed by Vite.
+
+For public access, use the [deployed PATHWISE AI application](https://path-wise-ai-one.vercel.app/).
 
 ---
 
-## 🧪 Automated Verification & Test Suite
+## 🧪 Automated Verification
 
-Run the full end-to-end SC-02 verification suite testing health, 4 mobility profiles, route confidence formulas, temporary barrier creation, dynamic graph detour, and automatic expiration restoration:
+The project includes a backend verification suite covering its core SC-02 functionality.
+
+The suite checks:
+
+1. Backend health.
+2. Map configuration and four mobility profiles.
+3. Pedestrian-network availability.
+4. Shortest and accessibility-aware routing.
+5. Evidence-confidence calculations.
+6. Citizen barrier creation.
+7. Dynamic rerouting.
+8. Temporary barrier expiration.
+9. Baseline route restoration.
+
+### Run the Verification Suite
+
+From the project root:
 
 ```powershell
 cd backend
 .\.venv\Scripts\python.exe test_complete_sc02.py
 ```
 
-Expected output:
-```text
-=================================================================
-PATHWISE AI - SC-02 Complete Automated Verification Test
-Problem Statement: SC-02 Accessible Walking Routes from Street Imagery
-=================================================================
-[PASS] 1. Backend Health Check OK
-[PASS] 2. Map Config OK: 4 Mobility Profiles present: ['general_pedestrian', 'wheelchair', 'blind_low_vision', 'elderly']
-[PASS] 3. Pedestrian Network Segments: 17 total (15 with imagery, 2 without)
-[PASS] 4a. Shortest Route: 413.3m | Confidence: 100/100 (High Evidence)
-[PASS] 4b. Wheelchair Route: 658.7m (+245.4m ramp detour) | Confidence: 100/100 (High Evidence)
-[PASS] 4c. Blind/Low Vision Route: 658.7m | Confidence: 100/100 (High Evidence)
-[PASS] 4d. Elderly Route: 658.7m | Confidence: 100/100 (High Evidence)
-[PASS] 5. Citizen Barrier Report Created: ID=usr_..., Type=temporary, ExpiresAt=...
-[PASS] 6. Live Dynamic Detour: Successfully rerouted around citizen-reported obstruction! Path length: 1074.0m
-[PASS] 7. Reports Listing OK: 1 total (1 active, 0 expired)
-[PASS] 8. Expiration & Baseline Restoration: Route restored to 658.7m
-[PASS] 9. Reset Barriers OK: Pristine baseline restored
+### Reported Demonstration Test Results
 
-ALL 9 COMPLETE SC-02 BACKEND VERIFICATION CHECKS PASSED SUCCESSFULLY!
+| Test Scenario | Reported Result |
+|---|---:|
+| Shortest Route | 413.3 m |
+| Wheelchair Route | 658.7 m |
+| Blind / Low Vision Route | 658.7 m |
+| Elderly Route | 658.7 m |
+| Additional Wheelchair Distance | 245.4 m |
+| Route with Active Citizen Obstruction | 1074.0 m |
+| Route After Barrier Expiration | 658.7 m |
+
+The supplied verification output reports:
+
+```text
+ALL 9 COMPLETE SC-02 BACKEND VERIFICATION CHECKS
+PASSED SUCCESSFULLY!
 ```
 
----
-
-## 🏛️ Demonstration Scenarios (Jaipur Ram Niwas Garden)
-
-1. **Monumental Stairs Avoidance**:
-   - Shortest path sends pedestrians down 18 monumental heritage steps (16.5% grade, no ramp).
-   - Wheelchair & elderly routing safely detours via the certified step-free Rose Garden ramp promenade.
-2. **Tactile Guidance Navigation**:
-   - Blind & low-vision routing steers pedestrians along continuous tactile paving tiles, avoiding sidewalk clutter and pole hazards.
-3. **Live Citizen Obstacle & Detour**:
-   - A user reports a parked delivery scooter blocking the ramp promenade.
-   - Within seconds, active wheelchair routing dynamically recalculates around the obstruction.
-4. **Temporary Barrier Auto-Expiration**:
-   - Using the 60-second live demo expiry, judges can observe the obstacle expire automatically, restoring the baseline optimal route without manual intervention.
+These results describe the supplied demonstration fixture and test run. Actual results depend on the selected route, active barriers and current dataset.
 
 ---
 
-## 📜 License & Hackathon Context
+## 🎯 Suggested Live Demonstration
 
-Developed for **Hypnexis 2026 Hackathon** at **Manipal University Jaipur**.  
-Problem Statement: **SC-02 — Accessible Walking Routes from Street Imagery**.  
-Tagline: *Beyond Shortest. Towards Safest.*
+The following sequence demonstrates PATHWISE AI's core capabilities.
+
+### Demo 1 — Shortest vs Accessible
+
+Select a supported Jaipur demonstration journey.
+
+Compare the shortest route with the wheelchair-accessible alternative and explain how a known stair barrier influences routing.
+
+### Demo 2 — Different Mobility Needs
+
+Switch between Wheelchair, Blind / Low Vision, Elderly and General Walking.
+
+Explain how profile-specific graph costs affect route selection and why two profiles may sometimes share an optimal route.
+
+### Demo 3 — StreetVision Reporting
+
+Upload a demonstration street photograph.
+
+Review the supported AI suggestion or manually select the correct accessibility barrier.
+
+Confirm the relevant location and submit the report.
+
+### Demo 4 — Dynamic Obstacle Rerouting
+
+Introduce a temporary citizen-reported obstruction affecting the selected pedestrian route.
+
+Demonstrate how the active graph overlay influences subsequent route calculations.
+
+### Demo 5 — Automatic Expiration
+
+Use the 60-second demonstration expiration option.
+
+Observe the temporary barrier becoming inactive and verify that the route can return to its baseline configuration.
+
+### Demo 6 — Evidence Transparency
+
+Show the route-confidence information and the number of segments without recent imagery.
+
+Explain why missing evidence must be communicated rather than hidden.
+
+---
+
+## 🔮 Future Scope
+
+PATHWISE AI is currently a limited-area hackathon prototype.
+
+Potential future extensions include:
+
+- Expansion to additional Indian cities.
+- Larger, locally annotated Indian street-imagery datasets.
+- Improved accessibility-specific computer vision models.
+- Broader pedestrian-network coverage.
+- Community-assisted barrier verification.
+- Persistent cloud-based image and report storage.
+- Integration with municipal accessibility datasets.
+- More detailed pedestrian-crossing and surface-condition information.
+
+Our long-term vision is to make accessibility a fundamental consideration in everyday navigation.
+
+---
+
+## 🏆 Hackathon Context
+
+**Event:** HypNexis 2026  
+**Host Institution:** Manipal University Jaipur  
+**Problem Statement:** SC-02 — Accessible Walking Routes from Street Imagery  
+**Project:** PATHWISE AI
+
+### Scope Covered
+
+- Original SC-02 problem statement.
+- Phase 2 extension.
+- Accessibility-aware pedestrian routing.
+- StreetVision-assisted citizen reporting.
+- Dynamic barrier lifecycle.
+- Mobility-specific routing.
+- Evidence-based route confidence.
+
+---
+
+<div align="center">
+
+### PATHWISE AI
+
+**Beyond Shortest. Towards Safest.**
+
+*Because every journey deserves an accessible path.*
+
+**Built for HypNexis 2026 | Manipal University Jaipur**
+
+### [🚀 Launch PATHWISE AI](https://path-wise-ai-one.vercel.app/)
+
+</div>
