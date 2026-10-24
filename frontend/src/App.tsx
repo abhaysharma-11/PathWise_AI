@@ -88,7 +88,7 @@ const MainLayout: React.FC = () => {
         {/* Minimalist Footer on non-map views */}
         {!isMapRoute && (
           <footer className="border-t border-surface-border/60 py-3 px-6 text-center text-xs text-slate-500 font-mono bg-canvas-950">
-            PATHWISE AI • Beyond Shortest. Towards Safest. • HypNex Hackathon SC-02
+            PATHWISE AI • Beyond Shortest. Towards Safest. • Hypnexis 2026 SC-02
           </footer>
         )}
       </div>

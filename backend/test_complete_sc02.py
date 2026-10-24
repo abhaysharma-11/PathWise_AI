@@ -77,7 +77,7 @@ def test_complete_sc02():
         "barrier_type": "temporary",
         "duration_minutes": 1, # 1 minute
         "description": "Delivery scooter parked across ramp pathway",
-        "notes": "HypNex live hackathon barrier test",
+        "notes": "Hypnexis 2026 live hackathon barrier test",
     }
     r = requests.post(f"{BASE_URL}/api/vision/user-report", json=report_payload, timeout=5)
     assert r.status_code == 200, f"Submit user report failed: {r.text}"

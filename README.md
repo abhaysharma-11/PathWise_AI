@@ -1,7 +1,7 @@
 # PATHWISE AI
 
 > **"Beyond Shortest. Towards Safest."**  
-> A hackathon-ready accessible pedestrian navigation platform engineered for the HypNex Hackathon at Manipal University Jaipur.
+> A hackathon-ready accessible pedestrian navigation platform engineered for the Hypnexis 2026 Hackathon at Manipal University Jaipur.
 > 
 > **Problem Statement:** SC-02 — Accessible Walking Routes from Street Imagery (Original Problem + Phase 2 Extension + Premium Consumer UX).
 
@@ -39,6 +39,41 @@ Standard navigation platforms (Google Maps, Apple Maps) optimize exclusively for
    - **Page 3: Report a Barrier (`/report` & `/street-vision`)**: 4-step reporting wizard (Add Photo $\to$ Identify Problem $\to$ Confirm Location $\to$ Submit Report) with live auto-expiration trigger and active reports management table.
 
 ---
+
+## 🖥️ Prototype Output & Application Preview
+
+PATHWISE AI is a functional, locally runnable full-stack prototype developed for **HypNexis 2026**.
+
+The following screenshots demonstrate the application's user experience, accessibility-aware route planning and StreetVision reporting workflow.
+
+### 1. Home — Accessible Navigation Starts Here
+
+A minimal, user-focused landing experience introducing PATHWISE AI and its mission: *Beyond Shortest. Towards Safest.*
+
+![PATHWISE AI Home](screenshots/home.png)
+
+### 2. Explore Routes — Beyond the Shortest Path
+
+The interactive Route Explorer combines four mobility profiles, accessibility-aware navigation, shortest-route comparison, obstacle visualisation and evidence-based route confidence.
+
+![PATHWISE AI Route Explorer](screenshots/route-explorer.png)
+
+### 3. StreetVision AI — See It. Report It. Improve the Route.
+
+StreetVision combines supported AI object detection with human-assisted barrier identification and a four-step citizen-reporting workflow.
+
+**Add Photo → Identify Problem → Confirm Location → Submit Report**
+
+![PATHWISE AI StreetVision](screenshots/streetvision.png)
+
+### Prototype Availability
+
+The complete source code is available in this repository. The application currently runs locally using React/Vite and Python/FastAPI.
+
+**Frontend:** `http://localhost:5173`  
+**Backend:** `http://127.0.0.1:8000`
+
+*These are local development addresses, not publicly accessible deployment URLs. Follow the Quick Start Guide to run the application.*
 
 ## 🏗️ Architecture Stack
 
@@ -139,6 +174,6 @@ ALL 9 COMPLETE SC-02 BACKEND VERIFICATION CHECKS PASSED SUCCESSFULLY!
 
 ## 📜 License & Hackathon Context
 
-Developed for **HypNex Hackathon** at **Manipal University Jaipur**.  
+Developed for **Hypnexis 2026 Hackathon** at **Manipal University Jaipur**.  
 Problem Statement: **SC-02 — Accessible Walking Routes from Street Imagery**.  
 Tagline: *Beyond Shortest. Towards Safest.*

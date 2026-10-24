@@ -23,7 +23,8 @@ raw_cors = os.getenv(
     "CORS_ORIGINS",
     "http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173,http://127.0.0.1:5174"
 )
-cors_origins = [origin.strip() for origin in raw_cors.split(",") if origin.strip()]
+cors_origins = [origin.strip().rstrip("/") for origin in raw_cors.split(",") if origin.strip()]
+has_wildcard = "*" in cors_origins
 environment = os.getenv("ENVIRONMENT", "development")
 
 app = FastAPI(
@@ -34,7 +35,12 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-uploads_dir = Path(__file__).resolve().parent.parent / "uploads"
+# Uploads directory with environment variable override for persistent volume mounts (Render)
+env_uploads = os.getenv("UPLOADS_DIR")
+if env_uploads:
+    uploads_dir = Path(env_uploads)
+else:
+    uploads_dir = Path(__file__).resolve().parent.parent / "uploads"
 uploads_dir.mkdir(parents=True, exist_ok=True)
 
 # Attach Services to application state
@@ -50,8 +56,8 @@ app.state.vision_service = VisionService(uploads_dir=uploads_dir)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
-    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1|\[::1\])(:[0-9]+)?$",
-    allow_credentials=True,
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1|\[::1\])(:[0-9]+)?$|^https://.*\.vercel\.app$",
+    allow_credentials=not has_wildcard,
     allow_methods=["*"],
     allow_headers=["*"],
 )

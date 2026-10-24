@@ -27,7 +27,11 @@ async def get_sample_images(request: Request):
     Returns curated sample Indian street demonstration images and their surveyed metadata
     for instant analysis and testing in the StreetVision workspace.
     """
-    manifest_path = Path(__file__).resolve().parent.parent.parent.parent / "dataset" / "metadata" / "dataset_manifest.json"
+    vision_service = request.app.state.vision_service
+    dataset_dir = getattr(vision_service, "dataset_dir", None)
+    if dataset_dir is None:
+        dataset_dir = Path(__file__).resolve().parent.parent.parent.parent / "dataset"
+    manifest_path = dataset_dir / "metadata" / "dataset_manifest.json"
     if manifest_path.exists():
         import json
         with open(manifest_path, "r", encoding="utf-8") as f:
@@ -37,9 +41,13 @@ async def get_sample_images(request: Request):
 
 
 @router.get("/sample-images/{filename}", summary="Serve Dataset Sample Image")
-async def get_sample_image_file(filename: str):
+async def get_sample_image_file(filename: str, request: Request):
     """Serves the raw image file from the dataset/images folder."""
-    images_dir = Path(__file__).resolve().parent.parent.parent.parent / "dataset" / "images"
+    vision_service = request.app.state.vision_service
+    dataset_dir = getattr(vision_service, "dataset_dir", None)
+    if dataset_dir is None:
+        dataset_dir = Path(__file__).resolve().parent.parent.parent.parent / "dataset"
+    images_dir = dataset_dir / "images"
     target = images_dir / filename
     if not target.exists() or not target.is_file():
         raise HTTPException(status_code=404, detail=f"Sample image '{filename}' not found.")

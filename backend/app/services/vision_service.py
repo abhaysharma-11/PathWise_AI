@@ -1,5 +1,6 @@
 import io
 import json
+import os
 import time
 import uuid
 from pathlib import Path
@@ -83,9 +84,28 @@ class VisionService:
 
     def __init__(self, uploads_dir: Optional[Path] = None, dataset_dir: Optional[Path] = None):
         if uploads_dir is None:
-            uploads_dir = Path(__file__).resolve().parent.parent / "uploads"
+            env_uploads = os.getenv("UPLOADS_DIR")
+            if env_uploads:
+                uploads_dir = Path(env_uploads)
+            else:
+                uploads_dir = Path(__file__).resolve().parent.parent / "uploads"
+
         if dataset_dir is None:
-            dataset_dir = Path(__file__).resolve().parent.parent.parent.parent / "dataset"
+            env_dataset = os.getenv("DATASET_DIR")
+            if env_dataset:
+                dataset_dir = Path(env_dataset)
+            else:
+                candidates = [
+                    Path(__file__).resolve().parent.parent.parent.parent / "dataset",
+                    Path(__file__).resolve().parent.parent.parent / "dataset",
+                    Path(__file__).resolve().parent.parent / "dataset",
+                    Path("dataset"),
+                ]
+                dataset_dir = candidates[0]
+                for c in candidates:
+                    if c.exists():
+                        dataset_dir = c
+                        break
 
         self.uploads_dir = uploads_dir
         self.dataset_dir = dataset_dir
@@ -105,10 +125,22 @@ class VisionService:
         """Attempts to load Ultralytics YOLO model if installed."""
         try:
             from ultralytics import YOLO
-            # Load lightweight YOLOv8 nano model
-            self.model = YOLO("yolov8n.pt")
+            # Search candidate weights paths
+            weights_candidates = [
+                Path("yolov8n.pt"),
+                Path(__file__).resolve().parent.parent / "yolov8n.pt",
+                Path(__file__).resolve().parent.parent.parent / "yolov8n.pt",
+                Path(__file__).resolve().parent.parent.parent.parent / "yolov8n.pt",
+            ]
+            weights_path = "yolov8n.pt"
+            for c in weights_candidates:
+                if c.exists():
+                    weights_path = str(c)
+                    break
+
+            self.model = YOLO(weights_path)
             self.model_loaded = True
-            print("StreetVision: Ultralytics YOLOv8n initialized successfully.")
+            print(f"StreetVision: Ultralytics YOLOv8n initialized successfully using weights at '{weights_path}'.")
         except Exception as e:
             self.model_loaded = False
             self.model = None

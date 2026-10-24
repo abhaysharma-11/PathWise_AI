@@ -8,7 +8,8 @@ import {
   RouteProfileType,
 } from '../types';
 
-const configuredBase = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000').trim();
+const rawBase = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000').trim();
+const configuredBase = rawBase.replace(/\/+$/, '');
 
 // Maintain active base URL across calls with automatic localhost / 127.0.0.1 loopback fallback
 let activeBaseUrl = configuredBase;
@@ -20,11 +21,12 @@ export function getApiBaseUrl(): string {
 }
 
 function getCandidateUrls(primary: string): string[] {
-  const list = [primary];
-  if (primary.includes('localhost')) {
-    list.push(primary.replace('localhost', '127.0.0.1'));
-  } else if (primary.includes('127.0.0.1')) {
-    list.push(primary.replace('127.0.0.1', 'localhost'));
+  const clean = primary.trim().replace(/\/+$/, '');
+  const list = [clean];
+  if (clean.includes('localhost')) {
+    list.push(clean.replace('localhost', '127.0.0.1'));
+  } else if (clean.includes('127.0.0.1')) {
+    list.push(clean.replace('127.0.0.1', 'localhost'));
   }
   return list;
 }

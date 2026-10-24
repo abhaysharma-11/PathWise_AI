@@ -1,3 +1,4 @@
+import os
 import sqlite3
 import uuid
 from datetime import datetime, timezone, timedelta
@@ -14,7 +15,11 @@ class ReportStore:
 
     def __init__(self, db_path: Optional[Path] = None):
         if db_path is None:
-            db_path = Path(__file__).resolve().parent.parent / "data" / "reports.db"
+            env_db = os.getenv("DATABASE_PATH")
+            if env_db:
+                db_path = Path(env_db)
+            else:
+                db_path = Path(__file__).resolve().parent.parent / "data" / "reports.db"
 
         self.db_path = db_path
         self.db_path.parent.mkdir(parents=True, exist_ok=True)

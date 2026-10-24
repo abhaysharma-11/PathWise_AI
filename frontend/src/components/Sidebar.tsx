@@ -115,7 +115,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="p-4 border-t border-surface-border bg-canvas-950/50">
           <div className="flex items-center gap-2 text-xs text-slate-400">
             <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span className="font-mono text-[10px]">HypNex Hackathon SC-02</span>
+            <span className="font-mono text-[10px]">Hypnexis 2026 SC-02</span>
           </div>
         </div>
       </aside>
